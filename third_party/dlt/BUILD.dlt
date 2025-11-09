@@ -1,0 +1,22 @@
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+filegroup(
+    name = "dlt_sources",
+    srcs = glob(["**"])
+)
+
+cmake(
+    name = "dlt_lib",
+    lib_name = "dlt-lib",
+    lib_source = ":dlt_sources",
+    out_static_libs = ["static/libdlt.a"],
+    includes = [ "includes" ],
+    cache_entries = {
+        "BUILD_SHARED_LIBS": "OFF",
+        "WITH_DLT_CONSOLE": "OFF",
+        "WITH_DLT_EXAMPLES": "OFF",
+        "WITH_DLT_TESTS": "OFF",
+        "WITH_DLT_NETWORK_TRACE": "OFF",
+    },
+    install=True
+)

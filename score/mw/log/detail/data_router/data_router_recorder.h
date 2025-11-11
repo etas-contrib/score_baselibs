@@ -71,15 +71,14 @@ private:
   template <typename T, typename LogFunc>
   void LogImpl(const SlotHandle &slot_handle, const T &data,
                LogFunc log_func) noexcept {
+
     auto it = contextDataMap_.find(static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
     if (it != contextDataMap_.end()) {
       log_func(&it->second, data);
     }
   }
 
-  const Configuration &config_;
-  SlotHandle slot_;
-  DltContext ctx_;
+  Configuration config_;
   DltLogLevelType log_level_;
 
   std::unordered_map<SlotIndex, DltContextData> contextDataMap_{};

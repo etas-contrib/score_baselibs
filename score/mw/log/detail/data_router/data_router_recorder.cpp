@@ -219,7 +219,6 @@ void DataRouterRecorder::Log(const SlotHandle &slot,
 
 bool DataRouterRecorder::IsLogEnabled(
     const LogLevel & log_level, const std::string_view context) const noexcept {
-    // return true;
     return config_.IsLogLevelEnabled(log_level, context, false);
 };
 

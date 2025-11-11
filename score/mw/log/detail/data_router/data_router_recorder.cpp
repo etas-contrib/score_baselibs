@@ -43,10 +43,12 @@ DataRouterRecorder::StartRecord(const std::string_view context_id,
   auto found_element = contextMap_.find(ctx_id);
   DltContext context;
   DltContext* context_to_log;
+  std::cout << __FUNCTION__ << "\n";
 
   if (found_element == contextMap_.end()) {
     auto inserted_element = contextMap_.insert({ctx_id, context});
     if (!inserted_element.second) {
+      std::cout << __FUNCTION__ << " Error inserting \n";
       return score::cpp::nullopt;
     }
 
@@ -68,8 +70,8 @@ DataRouterRecorder::StartRecord(const std::string_view context_id,
   }
 
   auto res =
-      contextDataMap_.insert({static_cast<SlotIndex>(record_index), log_local});
-  if (!res.second) {
+      contextDataMap_.insert_or_assign(static_cast<SlotIndex>(record_index), log_local);
+  if (res.second) {
     return SlotHandle(static_cast<SlotIndex>(record_index));
   } else {
     return score::cpp::nullopt;
@@ -80,7 +82,6 @@ void DataRouterRecorder::StopRecord(const SlotHandle &slot) noexcept {
   auto it = contextDataMap_.extract(slot.GetSlotOfSelectedRecorder());
 
   if (it.empty()) {
-    std::cout << __FUNCTION__ << " Tried to find bad slot\n";
     return;
   }
 

@@ -18,5 +18,8 @@ cmake(
         "WITH_DLT_TESTS": "OFF",
         "WITH_DLT_NETWORK_TRACE": "OFF",
     },
-    install=True
+    install=True,
+    visibility = [
+        "@score_baselibs//score/mw/log:__subpackages__",
+    ],
 )

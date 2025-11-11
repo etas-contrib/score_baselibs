@@ -17,6 +17,7 @@
 #include "score/mw/log/detail/error.h"
 #include "score/mw/log/detail/initialization_reporter.h"
 #include "score/mw/log/detail/recorder_config.h"
+#include <iostream>
 
 #ifdef __QNXNTO__
 #include "score/mw/log/detail/slog/slog_backend.h"
@@ -56,6 +57,7 @@ std::unique_ptr<Recorder> RecorderFactory::CreateRecorderFromLogMode(
     {
         case LogMode::kRemote:
         {
+            std::cout << "Remote\n";
             RemoteRecorderFactoryType remote_recorder_factory;
             recorder = remote_recorder_factory.CreateLogRecorder(config, memory_resource);
             break;

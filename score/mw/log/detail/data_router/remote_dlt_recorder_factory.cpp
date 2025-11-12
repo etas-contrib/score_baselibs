@@ -13,7 +13,10 @@
 
 #include "remote_dlt_recorder_factory.h"
 #include "data_router_recorder.h"
+#include "score/mw/log/configuration/configuration.h"
+#include "score/mw/log/configuration/configuration.h"
 #include <iostream>
+#include <memory>
 
 namespace score::mw::log::detail {
 
@@ -22,7 +25,7 @@ std::unique_ptr<Recorder> RemoteDltRecorderFactory::CreateConcreteLogRecorder(
     score::cpp::pmr::memory_resource *memory_resource)
 {
     std::cout << "Making recorder\n";
-    return std::make_unique<DataRouterRecorder>(config);
+    return std::make_unique<DataRouterRecorder>(config, memory_resource);
 }
 
 } // namespace score::mw::log::detail

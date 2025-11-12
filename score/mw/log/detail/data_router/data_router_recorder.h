@@ -7,6 +7,7 @@
 #include "score/mw/log/slot_handle.h"
 #include <dlt/dlt_types.h>
 #include <dlt/dlt_user.h>
+#include <score/memory.hpp>
 #include <score/optional.hpp>
 #include <unordered_map>
 
@@ -16,7 +17,9 @@ namespace score::mw::log::detail {
 
 class DataRouterRecorder : public Recorder {
 public:
-  DataRouterRecorder(const Configuration &config) noexcept;
+  DataRouterRecorder(
+      const Configuration &config,
+      score::cpp::pmr::memory_resource *memory_resource) noexcept;
   ~DataRouterRecorder() noexcept;
 
   score::cpp::optional<SlotHandle>
@@ -72,17 +75,32 @@ private:
   void LogImpl(const SlotHandle &slot_handle, const T &data,
                LogFunc log_func) noexcept {
 
-    auto it = contextDataMap_.find(static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
+    auto it = contextDataMap_.find(
+        static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
     if (it != contextDataMap_.end()) {
       log_func(&it->second, data);
     }
   }
 
   Configuration config_;
-  DltLogLevelType log_level_;
+  score::cpp::pmr::memory_resource *memory_resource_;
 
-  std::unordered_map<SlotIndex, DltContextData> contextDataMap_{};
-  std::unordered_map<LoggingIdentifier, DltContext, LoggingIdentifier::HashFunction> contextMap_{};
+  score::cpp::pmr::polymorphic_allocator<void> allocator_;
+
+  /// \brief A Map of all open `DLTContexts`.
+  std::unordered_map<LoggingIdentifier, DltContext,
+                     LoggingIdentifier::HashFunction,
+                     std::equal_to<LoggingIdentifier>,
+                     score::cpp::pmr::polymorphic_allocator<
+                         std::pair<const LoggingIdentifier, DltContext>>>
+      contextMap_;
+
+  /// \brief Map of all current open records.
+  std::unordered_map<SlotIndex, DltContextData, std::hash<SlotIndex>,
+                     std::equal_to<SlotIndex>,
+                     score::cpp::pmr::polymorphic_allocator<
+                         std::pair<const SlotIndex, DltContextData>>>
+      contextDataMap_;
 };
 
 } // namespace score::mw::log::detail

@@ -4,7 +4,9 @@
 #include <dlt/dlt_types.h>
 #include <dlt/dlt_user.h>
 #include <dlt/dlt_user_macros.h>
+#include <filesystem>
 #include <iostream>
+#include <type_traits>
 
 namespace {
 
@@ -16,8 +18,14 @@ constexpr DltLogLevelType convert(const score::mw::log::LogLevel log_level) {
 
 namespace score::mw::log::detail {
 
-DataRouterRecorder::DataRouterRecorder(const Configuration &config) noexcept
-    : Recorder(), config_(config) {
+DataRouterRecorder::DataRouterRecorder(
+    const Configuration &config,
+    score::cpp::pmr::memory_resource *memory_resource) noexcept
+    : Recorder(), config_(config), memory_resource_(memory_resource),
+      allocator_(memory_resource_),
+      contextMap_(std::allocator_traits<decltype(allocator_)>::rebind_alloc<decltype(contextMap_)::allocator_type>()),
+      contextDataMap_(std::allocator_traits<decltype(allocator_)>::rebind_alloc<decltype(contextDataMap_)::allocator_type>())
+      {
   DLT_REGISTER_APP(config_.GetAppId().begin(),
                    config_.GetAppDescription().begin());
 };
@@ -48,18 +56,18 @@ DataRouterRecorder::StartRecord(const std::string_view context_id,
       return score::cpp::nullopt;
     }
 
-    DLT_REGISTER_CONTEXT(inserted_element.first->second,        // context
-                         inserted_element.first->first.GetStringView().begin(), // context id
-                         "XXX");
+    DLT_REGISTER_CONTEXT(
+        inserted_element.first->second,                        // context
+        inserted_element.first->first.GetStringView().begin(), // context id
+        "XXX");
     context_to_log = &inserted_element.first->second;
   } else {
     context_to_log = &found_element->second;
   }
 
-  log_level_ = convert(log_level);
   DltContextData log_local;
   auto record_index =
-      dlt_user_log_write_start(context_to_log, &log_local, log_level_);
+      dlt_user_log_write_start(context_to_log, &log_local, convert(log_level));
   if (record_index < 0) {
     return score::cpp::nullopt;
   }
@@ -190,24 +198,35 @@ void DataRouterRecorder::Log(const SlotHandle &slot,
 
 void DataRouterRecorder::Log(const SlotHandle &slot,
                              const LogBin32 data) noexcept {
-  // auto log_bin = [](DltContextData* ctx, const std::uint16_t data)
-  // {
-  //     dlt_user_log_write_uint16_formatted(ctx, data, DLT_FORMAT_BIN16);
-  // };
-  // LogImpl(slot, data.value >> 16, log_bin);
-  // LogImpl(slot, data.value & 0xFFFF, log_bin);
+  auto log_bin = [](DltContextData *ctx, const std::uint16_t data) {
+    dlt_user_log_write_uint16_formatted(ctx, data, DLT_FORMAT_BIN16);
+  };
+
+  LogImpl(slot, static_cast<std::uint16_t>((data.value >> 16U) & 0x0000FFFFU),
+          log_bin);
+  LogImpl(slot, static_cast<std::uint16_t>(data.value & 0x0000FFFFU), log_bin);
 };
 
 void DataRouterRecorder::Log(const SlotHandle &slot,
                              const LogBin64 data) noexcept {
-  // auto log_bin = [](DltContextData* ctx, const LogHex8 value)
-  // {
-  //     dlt_user_log_write_uint8_formatted(ctx, value.value, DLT_FORMAT_HEX64);
-  // };
-  // LogImpl(slot, data, log_bin);
+  auto log_bin = [](DltContextData *ctx, const std::uint16_t value) {
+    dlt_user_log_write_uint16_formatted(ctx, value, DLT_FORMAT_HEX16);
+  };
+  LogImpl(slot,
+          static_cast<std::uint16_t>((data.value >> 48U) & 0x000000000000FFFFU),
+          log_bin);
+  LogImpl(slot,
+          static_cast<std::uint16_t>((data.value >> 32U) & 0x000000000000FFFFU),
+          log_bin);
+  LogImpl(slot,
+          static_cast<std::uint16_t>((data.value >> 16U) & 0x000000000000FFFFU),
+          log_bin);
+  LogImpl(slot, static_cast<std::uint16_t>(data.value & 0x000000000000FFFFU),
+          log_bin);
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot, const LogRawBuffer data) noexcept {
+void DataRouterRecorder::Log(const SlotHandle &slot,
+                             const LogRawBuffer data) noexcept {
   LogImpl(slot, data.data(), dlt_user_log_write_constant_string);
 };
 
@@ -218,8 +237,8 @@ void DataRouterRecorder::Log(const SlotHandle &slot,
 };
 
 bool DataRouterRecorder::IsLogEnabled(
-    const LogLevel & log_level, const std::string_view context) const noexcept {
-    return config_.IsLogLevelEnabled(log_level, context, false);
+    const LogLevel &log_level, const std::string_view context) const noexcept {
+  return config_.IsLogLevelEnabled(log_level, context, false);
 };
 
 } // namespace score::mw::log::detail

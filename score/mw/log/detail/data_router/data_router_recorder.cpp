@@ -38,7 +38,7 @@ DataRouterRecorder::StartRecord(const std::string_view context_id,
     return score::cpp::nullopt;
   }
 
-  std::string ctx_id{context_id};
+  LoggingIdentifier ctx_id{context_id};
   auto found_element = contextMap_.find(ctx_id);
   DltContext *context_to_log;
 
@@ -49,7 +49,7 @@ DataRouterRecorder::StartRecord(const std::string_view context_id,
     }
 
     DLT_REGISTER_CONTEXT(inserted_element.first->second,        // context
-                         inserted_element.first->first.c_str(), // context id
+                         inserted_element.first->first.GetStringView().begin(), // context id
                          "XXX");
     context_to_log = &inserted_element.first->second;
   } else {

@@ -82,7 +82,7 @@ private:
   DltLogLevelType log_level_;
 
   std::unordered_map<SlotIndex, DltContextData> contextDataMap_{};
-  std::unordered_map<std::string, DltContext> contextMap_{};
+  std::unordered_map<LoggingIdentifier, DltContext, LoggingIdentifier::HashFunction> contextMap_{};
 };
 
 } // namespace score::mw::log::detail

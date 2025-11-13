@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}",
+                "/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/execroot/_main/bazel-out/k8-fastbuild/bin/**",
+                "/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/execroot/_main/bazel-out/k8-dbg/bin/**",
+                "/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/external/googletest+/googletest/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

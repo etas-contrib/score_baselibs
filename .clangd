@@ -1,0 +1,21 @@
+CompileFlags:
+  Add:
+    - "-I/workspaces/baselibs"
+    - "-I/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/execroot/_main/bazel-out/k8-fastbuild/bin"
+    - "-I/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/execroot/_main/bazel-out/k8-dbg/bin"
+    - "-I/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/external/googletest+/googletest/include"
+    - "-I/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/execroot/_main/bazel-out/k8-fastbuild/bin/score/language/futurecpp/_virtual_includes/futurecpp_internal"
+    - "-I/var/cache/bazel/1e588e1bfcce62ea541297aa1fef1b9f/execroot/_main/bazel-out/k8-dbg/bin/score/language/futurecpp/_virtual_includes/futurecpp_internal"
+    - "-I/workspaces/baselibs/score/language/futurecpp/include"
+    - "-std=c++17"
+    - "-stdlib=libstdc++"
+  CompilationDatabase: ""
+
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
+  ClangTidy:
+    Remove: "*"
+
+Index:
+  Background: Build

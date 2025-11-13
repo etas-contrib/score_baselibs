@@ -18,11 +18,10 @@ cc_library(
         "@score_baselibs//score/mw/log/detail:backend_interface",
         "@score_baselibs//score/mw/log/detail:dlt_content_formatting",
         "@score_baselibs//score/mw/log/detail:statistics_reporter",
-        # "@score_baselibs//score/os/utils:high_resolution_steady_clock",
         "@score_baselibs//score/static_reflection_with_serialization/serialization",
         "@score_baselibs//score/mw/log/detail:log_recorder_factory",
         "@score_baselibs//score/language/futurecpp",
-        "@dlt//:dlt_lib"
+        "@score_baselibs//score/mw/log/detail/data_router/dlt",
     ],
     visibility = [
         "@score_baselibs//score/mw/log:__subpackages__",

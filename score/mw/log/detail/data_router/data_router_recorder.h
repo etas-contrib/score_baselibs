@@ -10,6 +10,8 @@
 #include <score/memory.hpp>
 #include <score/optional.hpp>
 #include <unordered_map>
+#include "dlt/idlt_wrapper.hpp"
+#include <memory>
 
 #include <iostream>
 
@@ -17,9 +19,16 @@ namespace score::mw::log::detail {
 
 class DataRouterRecorder : public Recorder {
 public:
+  // Constructor that accepts a DLT implementation - for production use
   DataRouterRecorder(
       const Configuration &config,
       score::cpp::pmr::memory_resource *memory_resource) noexcept;
+
+  // Constructor that accepts a custom DLT implementation - for testing/mocking
+  DataRouterRecorder(
+      const Configuration &config,
+      score::cpp::pmr::memory_resource *memory_resource,
+      std::unique_ptr<dlt::IDlt> dlt_implementation) noexcept;
   ~DataRouterRecorder() noexcept;
 
   score::cpp::optional<SlotHandle>
@@ -71,18 +80,32 @@ public:
                     const std::string_view context) const noexcept;
 
 private:
-  template <typename T, typename LogFunc>
-  void LogImpl(const SlotHandle &slot_handle, const T &data,
-               LogFunc log_func) noexcept {
+template <typename T, typename LogFunc>
+std::enable_if_t<
+    std::is_same_v<
+        std::invoke_result_t<LogFunc, DltContextData*, const T>,
+        DltReturnValue
+    > ||
+    std::is_same_v<
+        std::invoke_result_t<LogFunc, DltContextData*, const T&>,
+        DltReturnValue
+    >,
+    DltReturnValue
+>
+LogImpl(const SlotHandle &slot_handle, const T &data,
+             LogFunc log_func) noexcept {
 
-    auto it = contextDataMap_.find(
-        static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
-    if (it != contextDataMap_.end()) {
-      log_func(&it->second, data);
-    }
+  auto it = contextDataMap_.find(
+      static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
+  if (it != contextDataMap_.end()) {
+    return log_func(&it->second, data);
   }
 
+  return DLT_RETURN_ERROR;
+}
+
   Configuration config_;
+
   score::cpp::pmr::memory_resource *memory_resource_;
 
   score::cpp::pmr::polymorphic_allocator<void> allocator_;
@@ -101,6 +124,8 @@ private:
                      score::cpp::pmr::polymorphic_allocator<
                          std::pair<const SlotIndex, DltContextData>>>
       contextDataMap_;
+  
+  std::unique_ptr<dlt::IDlt> dlt_;
 };
 
 } // namespace score::mw::log::detail

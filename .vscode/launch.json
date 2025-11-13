@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Current Bazel Test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bazel-bin/${relativeFileDirname}/${fileBasenameNoExtension}s",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Skip external directory errors",
+                    "text": "-gdb-set directories .",
+                    "ignoreFailures": true
+                }
+            ],
+            "sourceFileMap": {
+                "/proc/self/cwd": "${workspaceFolder}"
+            },
+            "preLaunchTask": "Build Current Test with Debug Symbols",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}

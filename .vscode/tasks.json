@@ -1,0 +1,85 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Current Test with Debug Symbols",
+            "type": "shell",
+            "command": "bazel",
+            "args": [
+                "build",
+                "--config=bl-x86_64-linux",
+                "-c",
+                "dbg",
+                "//${relativeFileDirname}:${fileBasenameNoExtension}s"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Specific Test with Debug Symbols",
+            "type": "shell",
+            "command": "bazel",
+            "args": [
+                "build",
+                "--config=bl-x86_64-linux",
+                "-c",
+                "dbg",
+                "//score/concurrency:thread_pool_tests"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build All Tests",
+            "type": "shell",
+            "command": "bazel",
+            "args": [
+                "build",
+                "--config=bl-x86_64-linux",
+                "//..."
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run All Tests",
+            "type": "shell",
+            "command": "bazel",
+            "args": [
+                "test",
+                "--config=bl-x86_64-linux",
+                "//..."
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

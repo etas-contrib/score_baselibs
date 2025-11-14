@@ -8,7 +8,8 @@ namespace score::mw::log::detail::dlt {
 
 class DltMock : public IDlt {
 public:
-  DltMock() noexcept = default;
+  DltMock() noexcept;
+  ~DltMock() noexcept;
 
   MOCK_METHOD(DltReturnValue, RegisterApp, 
               (std::string_view app_id, std::string_view description), 
@@ -25,7 +26,7 @@ public:
               (noexcept, override));
               
   MOCK_METHOD(DltReturnValue, StartLog,
-              (DltContext context, DltContextData record, DltLogLevelType log_level),
+              (DltContext* context, DltContextData* record, DltLogLevelType log_level),
               (noexcept, override));
               
   MOCK_METHOD(DltReturnValue, FinishLog, 

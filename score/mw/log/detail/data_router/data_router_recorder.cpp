@@ -5,6 +5,7 @@
 #include <dlt/dlt_types.h>
 #include <dlt/dlt_user.h>
 #include <dlt/dlt_user_macros.h>
+#include "score/mw/log/log_level.h"
 
 namespace {
 

@@ -29,7 +29,6 @@ cc_library(
     name = "mqueue",
     srcs = ["mqueue.cpp"],
     features = COMPILER_WARNING_FEATURES,
-    tags = ["FFI"],
     visibility = ["//visibility:public"],
     deps = [
         ":mqueue_headers",
@@ -141,8 +140,7 @@ cc_library(
         "@score_baselibs//score/analysis/tracing/generic_trace_library/details/trace_job_allocator:__pkg__",
         "@score_baselibs//score/analysis/tracing/generic_trace_library/test/unit_test:__pkg__",
         "@score_baselibs//score/analysis/tracing/plugin/ipc_trace_plugin/ipc_trace/utils:__pkg__",
-        "@score_baselibs//score/mw/log/detail/data_router/shared_memory:__pkg__",
-        "@score_baselibs//score/mw/log/detail/file_logging:__pkg__",
+        "@score_baselibs//score/mw/log/detail:__subpackages__",
         "@score_baselibs//score/os/utils:__pkg__",
         "@score_baselibs//score/os/utils/test:__pkg__",
     ],
@@ -247,7 +245,7 @@ cc_library(
     hdrs = ["tcp_keep_alive.h"],
     features = COMPILER_WARNING_FEATURES,
     target_compatible_with = select({
-        "@platforms//os:qnx": ["//bazel/platforms/qnx_version:qnx7"],  # TODO: Ticket-214211 QNX8 incompatible
+        "@platforms//os:qnx": ["//bazel/platforms/qnx_version:qnx7"],  # TODO: Ticket-213412 QNX8 TCP statistics are not supported yet
         "//conditions:default": [],
     }),
     visibility = ["//visibility:public"],

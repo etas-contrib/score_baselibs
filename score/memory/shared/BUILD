@@ -123,6 +123,9 @@ cc_library(
         "@score_baselibs//score/language/safecpp/string_view:null_termination_check",
     ],
     tags = ["FFI"],
+    visibility = [
+        "@score_baselibs//score/memory/shared/fake:__subpackages__",
+    ],
     deps = [
         ":i_shared_memory_resource",
         ":lock_file",
@@ -532,22 +535,12 @@ cc_library(
 )
 
 cc_library(
-    name = "fake_memory_resources",
-    testonly = True,
-    srcs = [
-        "fake/my_bounded_memory_resource.cpp",
-        "fake/my_memory_resource.cpp",
-    ],
-    hdrs = [
-        "fake/my_bounded_memory_resource.h",
-        "fake/my_memory_resource.h",
-    ],
+    name = "data_type_size_info",
+    srcs = ["data_type_size_info.cpp"],
+    hdrs = ["data_type_size_info.h"],
     features = COMPILER_WARNING_FEATURES,
+    tags = ["FFI"],
     visibility = ["//visibility:public"],
-    deps = [
-        ":types",
-        "@score_baselibs//score/language/futurecpp",
-    ],
 )
 
 cc_unit_test(
@@ -639,9 +632,9 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":managed_memory_resource",
         ":shared_memory_test_resources",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -656,8 +649,8 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":map",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -689,8 +682,8 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":memory_resource_proxy",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -738,8 +731,8 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":polymorphic_offset_ptr_allocator",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -768,9 +761,9 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":pointer_arithmetic_util",
         ":shared_memory_test_resources",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -835,9 +828,9 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":pointer_arithmetic_util",
         ":shared_memory_test_resources",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -852,8 +845,8 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":shared_memory_test_resources",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
         "@score_baselibs//score/os/utils/acl:mock",
     ],
@@ -869,8 +862,8 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":vector",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
     ],
 )
@@ -888,9 +881,19 @@ cc_gtest_unit_test(
         "@score_baselibs//score/memory:__pkg__",
     ],
     deps = [
-        ":fake_memory_resources",
         ":string",
+        "@score_baselibs//score/memory/shared/fake:fake_memory_resources",
         "@score_baselibs//score/mw/log:backend_stub_testutil",
+    ],
+)
+
+cc_gtest_unit_test(
+    name = "data_type_size_info_test",
+    srcs = ["data_type_size_info_test.cpp"],
+    features = COMPILER_WARNING_FEATURES,
+    deps = [
+        ":data_type_size_info",
+        "@score_baselibs//score/mw/log",
     ],
 )
 
@@ -912,6 +915,7 @@ cc_unit_test_suites_for_host_and_qnx(
         ":lock_file_test",
         ":managed_memory_resource_test",
         ":map_test",
+        ":data_type_size_info_test",
         ":memory_region_bounds_test",
         ":memory_region_map_test",
         ":memory_resource_proxy_test",

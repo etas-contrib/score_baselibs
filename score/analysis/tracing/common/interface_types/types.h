@@ -16,8 +16,10 @@
 #include "score/language/safecpp/scoped_function/move_only_scoped_function.h"
 #include "score/memory/shared/shared_memory_resource.h"
 #include "score/result/result.h"
+#include <array>
 #include <cstdint>
 #include <memory>
+#include <string_view>
 
 namespace score
 {
@@ -37,9 +39,23 @@ constexpr auto kBlockSize = 64U;
 // coverity[autosar_cpp14_a0_1_1_violation]
 constexpr std::uint8_t kMaxChunksPerOneTraceRequest = 10U;
 
-// NOLINTNEXTLINE(modernize-avoid-c-arrays): Tolerated
-constexpr char kRingBufferSharedMemoryPath[] = "/dev_shmem";
+// Suppress "AUTOSAR C++14 A0-1-1" rule finding. This rule states: "A project shall not contain
+// instances of non-volatile variables being given values that are not subsequently used."
+// The variable kRingBufferSharedMemoryPath is declared and given value that is used in multiple files
+// like object_factory.cpp, shm_ring_buffer.cpp, trace_job_processor_factory.cpp (false positive)
+// coverity[autosar_cpp14_a0_1_1_violation: False]
+constexpr std::string_view kRingBufferSharedMemoryPath = "/dev_shmem";
+// Suppress "AUTOSAR C++14 A0-1-1" rule finding. This rule states: "A project shall not contain
+// instances of non-volatile variables being given values that are not subsequently used."
+// The variable kNumberOfElements is declared and given value that is used in multiple files
+// like object_factory.cpp and trace_job_processor_factory.cpp (false positive)
+// coverity[autosar_cpp14_a0_1_1_violation: False]
 constexpr std::uint16_t kNumberOfElements = 500U;
+// Suppress "AUTOSAR C++14 A0-1-1" rule finding. This rule states: "A project shall not contain
+// instances of non-volatile variables being given values that are not subsequently used."
+// The variable kRingBufferSharedMemorySize is declared and given value that is used in multiple files
+// like shm_ring_buffer.cpp (false positive)
+// coverity[autosar_cpp14_a0_1_1_violation: False]
 constexpr std::size_t kRingBufferSharedMemorySize = 102400U;
 
 /// @brief Type used to store Trace client Id
@@ -60,7 +76,19 @@ struct TmdStatistics
     std::size_t tmd_total;
     std::size_t tmd_max;
     std::size_t tmd_average;
+    // Suppress "AUTOSAR C++14 A9-6-1" rule finding. This rule states: "Data types used for interfacing with
+    // hardware or conforming to communication protocols shall be trivial, standard-layout and only contain members
+    // of types with defined sizes.".
+    // client_pid is a system-defined identifier used for OS process handling inside the same ECU (IPC).
+    // No external communication interface is provided.
+    // coverity[autosar_cpp14_a9_6_1_violation]
     pid_t client_pid;
+    // Suppress "AUTOSAR C++14 A9-6-1" rule finding. This rule states: "Data types used for interfacing with
+    // hardware or conforming to communication protocols shall be trivial, standard-layout and only contain members
+    // of types with defined sizes.".
+    // tmd_alloc_rate is used for internal calculations only inside the same ECU, not interfacing with external
+    // hardware or communication protocols.
+    // coverity[autosar_cpp14_a9_6_1_violation]
     float tmd_alloc_rate;
 };
 

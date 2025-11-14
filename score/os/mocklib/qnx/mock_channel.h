@@ -44,7 +44,7 @@ class MockChannel : public Channel
 
     MOCK_METHOD((score::cpp::expected_blank<score::os::Error>),
                 MsgReply,
-                (std::int32_t rcvid, std::int64_t status, const void* msg, std::size_t bytes),
+                (std::int64_t rcvid, std::int64_t status, const void* msg, std::size_t bytes),
                 (const, noexcept, override));
 
     MOCK_METHOD((score::cpp::expected_blank<score::os::Error>),
@@ -101,6 +101,11 @@ class MockChannel : public Channel
                 (const, noexcept, override));
 
     MOCK_METHOD((score::cpp::expected_blank<score::os::Error>), ConnectDetach, (std::int32_t coid), (const, noexcept, override));
+
+    MOCK_METHOD((score::cpp::expected<std::int32_t, score::os::Error>),
+                MsgRegisterEvent,
+                (sigevent * ev, std::int32_t coid),
+                (noexcept, override));
 };
 
 /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Shaddowing function name is intended. */

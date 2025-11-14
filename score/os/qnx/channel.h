@@ -68,7 +68,7 @@ class Channel : public ObjectSeam<Channel>
     /* KW_SUPPRESS_END:MISRA.USE.EXPANSION:Using library-defined macro to ensure correct operation */
 
     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */
-    virtual score::cpp::expected_blank<score::os::Error> MsgReply(const std::int32_t rcvid,
+    virtual score::cpp::expected_blank<score::os::Error> MsgReply(const std::int64_t rcvid,
                                                          const std::int64_t status,
                                                          const void* const msg,
                                                          const std::size_t bytes) const noexcept = 0;
@@ -142,6 +142,8 @@ class Channel : public ObjectSeam<Channel>
     /* KW_SUPPRESS_START:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */
     virtual score::cpp::expected_blank<score::os::Error> ConnectDetach(const std::int32_t coid) const noexcept = 0;
     /* KW_SUPPRESS_END:MISRA.VAR.HIDDEN:Wrapper function is identifiable through namespace usage */
+
+    virtual score::cpp::expected<std::int32_t, score::os::Error> MsgRegisterEvent(sigevent* ev, std::int32_t coid) noexcept = 0;
 
     Channel() = default;
     virtual ~Channel() = default;

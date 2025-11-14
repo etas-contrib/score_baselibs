@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#ifndef GENERIC_TRACE_API_ERROR_CODE_H
-#define GENERIC_TRACE_API_ERROR_CODE_H
+#ifndef SCORE_ANALYSIS_TRACING_GENERIC_TRACE_LIBRARY_INTERFACE_TYPES_ERROR_CODE_ERROR_CODE_H
+#define SCORE_ANALYSIS_TRACING_GENERIC_TRACE_LIBRARY_INTERFACE_TYPES_ERROR_CODE_ERROR_CODE_H
 
 #include "score/result/error.h"
 #include <score/string_view.hpp>
@@ -87,6 +87,7 @@ enum class ErrorCode : score::result::ErrorCode
 
     kNoSpaceLeftForAllocationRecoverable,      ///< No space to allocate in TMD shared memory
     kIndexOutOfBoundsInSharedListRecoverable,  ///< Element os not found to retrieve or deallocate
+    kMemoryCorruptionDetectedFatal,            ///< Memory corruption detected via canary values (Fatal)
 
     kDaemonNotAvailableFatal,              ///< LTPM Daemon not available (Fatal)
     kFailedRegisterCachedClientsFatal,     ///< Failed to register the cached client registration requests (Fatal)
@@ -117,4 +118,4 @@ bool IsErrorRecoverable(const score::analysis::tracing::ErrorCode code) noexcept
 }  // namespace analysis
 }  // namespace score
 
-#endif  // GENERIC_TRACE_API_ERROR_CODE_H
+#endif  // SCORE_ANALYSIS_TRACING_GENERIC_TRACE_LIBRARY_INTERFACE_TYPES_ERROR_CODE_ERROR_CODE_H

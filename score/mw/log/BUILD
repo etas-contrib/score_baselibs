@@ -31,7 +31,7 @@ cc_library(
             "@score_baselibs//score/mw/log/detail:recorder_factory_stub",
         ],
         "//conditions:default": [
-            "@score_baselibs//score/mw/log/detail:recorder_factory",
+            "@score_baselibs//score/mw/log/detail/common:recorder_factory",
         ],
     }),
 )
@@ -60,13 +60,13 @@ cc_library(
         "@score_baselibs//score/mw/log/detail:circular_allocator",
         "@score_baselibs//score/mw/log/detail:empty_recorder",
         "@score_baselibs//score/mw/log/detail:thread_local_guard",
-        "@score_baselibs//score/mw/log/detail/wait_free_stack",
         "@score_baselibs//score/result",
     ],
     tags = ["FFI"],
     visibility = ["//visibility:public"],
     deps = [
         ":log_stream",
+        "@score_baselibs//score/mw/log/detail/wait_free_stack",  #Ticket-222244
     ],
 )
 
@@ -84,8 +84,7 @@ cc_library(
     features = COMPILER_WARNING_FEATURES,
     tags = ["FFI"],
     visibility = [
-        "@score_baselibs//score/mw/log:__pkg__",
-        "@score_baselibs//score/mw/log/detail:__subpackages__",
+        "//visibility:public",
     ],
     deps = [":recorder"],
 )
@@ -107,13 +106,7 @@ cc_library(
     features = COMPILER_WARNING_FEATURES,
     tags = ["FFI"],
     visibility = [
-        "//platform/aas/ara/log:__subpackages__",
-        "//platform/aas/test/pas/logging/utils:__pkg__",
-        "@score_baselibs//score/mw/log/configuration:__pkg__",
-        "@score_baselibs//score/mw/log/detail:__pkg__",
-        "@score_baselibs//score/mw/log/detail/data_router:__pkg__",
-        "@score_baselibs//score/mw/log/detail/file_logging:__pkg__",
-        "@score_baselibs//score/mw/log/detail/slog:__pkg__",
+        "//visibility:public",
     ],
     deps = [
         "@score_baselibs//score/language/futurecpp",
@@ -127,10 +120,7 @@ cc_library(
     features = COMPILER_WARNING_FEATURES,
     tags = ["FFI"],
     visibility = [
-        "@score_baselibs//score/mw/log/detail:__pkg__",
-        "@score_baselibs//score/mw/log/detail/data_router:__pkg__",
-        "@score_baselibs//score/mw/log/detail/file_logging:__pkg__",
-        "@score_baselibs//score/mw/log/detail/slog:__pkg__",
+        "//visibility:public",
     ],
     deps = [
         ":shared_types",
@@ -281,11 +271,10 @@ cc_test(
     ],
     tags = ["unit"],
     deps = [
-        ":frontend",
-        ":recorder_mock",
         "@googletest//:gtest_main",
-        "@score_baselibs//score/mw/log/detail:recorder_factory",
-        "@score_baselibs//score/mw/log/detail/wait_free_stack",
+        "@score_baselibs//score/mw/log:frontend",
+        "@score_baselibs//score/mw/log:recorder_mock",
+        "@score_baselibs//score/mw/log/detail/common:recorder_factory",
     ],
 )
 
@@ -351,9 +340,26 @@ cc_test(
         ":frontend",
         ":recorder_mock",
         "@googletest//:gtest_main",
-        "@score_baselibs//score/mw/log/detail:recorder_factory",
-        "@score_baselibs//score/mw/log/detail/wait_free_stack",
+        "@score_baselibs//score/mw/log/detail/common:recorder_factory",
         "@score_baselibs//score/mw/log/test/my_custom_lib:my_custom_type_mw_log",
+    ],
+)
+
+cc_test(
+    name = "log_stream_factory_test",
+    srcs = [
+        "log_stream_factory_test.cpp",
+    ],
+    features = COMPILER_WARNING_FEATURES + [
+        "aborts_upon_exception",
+    ],
+    tags = ["unit"],
+    deps = [
+        ":frontend",
+        ":recorder_mock",
+        "@googletest//:gtest_main",
+        "@score_baselibs//score/mw/log/detail:thread_local_guard",
+        "@score_baselibs//score/mw/log/detail/common:recorder_factory",
     ],
 )
 
@@ -379,6 +385,7 @@ cc_unit_test_suites_for_host_and_qnx(
         ":log_types_test",
         ":log_level_test",
         ":log_stream_error_test",
+        ":log_stream_factory_test",
         ":logger_container_test",
         ":logger_test",
         ":logging_test",

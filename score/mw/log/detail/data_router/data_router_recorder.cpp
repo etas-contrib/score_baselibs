@@ -17,18 +17,12 @@ constexpr DltLogLevelType convert(const score::mw::log::LogLevel log_level) {
 
 namespace score::mw::log::detail {
 
-DataRouterRecorder::DataRouterRecorder(
-    const Configuration &config,
-    score::cpp::pmr::memory_resource *memory_resource) noexcept
-    : DataRouterRecorder(config, memory_resource, std::make_unique<dlt::Dlt>()) {
-}
-
 // Injectable constructor - accepts any IDlt implementation
 DataRouterRecorder::DataRouterRecorder(
     const Configuration &config,
     score::cpp::pmr::memory_resource *memory_resource,
     std::unique_ptr<dlt::IDlt> dlt_implementation) noexcept
-    : Recorder(), config_(config), memory_resource_(memory_resource),
+    : config_(config), memory_resource_(memory_resource),
       allocator_(memory_resource_),
       contextMap_(std::allocator_traits<decltype(allocator_)>::rebind_alloc<
                   decltype(contextMap_)::allocator_type>()),
@@ -57,7 +51,7 @@ DataRouterRecorder::StartRecord(const std::string_view context_id,
 
   LoggingIdentifier ctx_id{context_id};
   auto found_element = contextMap_.find(ctx_id);
-  DltContext *context_to_log;
+  DltContext *context_to_log = nullptr;
 
   if (found_element == contextMap_.end()) {
     auto [inserted_element, insert_res] = contextMap_.try_emplace(ctx_id);

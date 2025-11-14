@@ -21,7 +21,7 @@ namespace score::mw::log::detail::dlt {
 class Dlt : public IDlt {
 public:
   Dlt() noexcept = default;
-  ~Dlt() = default;
+  ~Dlt() override = default;
 
   Dlt(const Dlt&) = delete;
   Dlt& operator=(const Dlt&) = delete;

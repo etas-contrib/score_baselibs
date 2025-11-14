@@ -50,7 +50,7 @@ DltReturnValue Dlt::FinishLog(DltContextData *record) noexcept {
 }
 
 DltReturnValue Dlt::LogBool(DltContextData *record, bool data) noexcept {
-  return dlt_user_log_write_bool(record, data);
+  return dlt_user_log_write_bool(record, static_cast<std::uint8_t>(data));
 }
 
 DltReturnValue Dlt::LogUint8(DltContextData *record, std::uint8_t data) noexcept {

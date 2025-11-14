@@ -9,7 +9,7 @@ namespace score::mw::log::detail::dlt {
 class DltMock : public IDlt {
 public:
   DltMock() noexcept;
-  ~DltMock() noexcept;
+  ~DltMock() noexcept override;
 
   MOCK_METHOD(DltReturnValue, RegisterApp, 
               (std::string_view app_id, std::string_view description), 

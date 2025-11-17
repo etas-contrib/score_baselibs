@@ -82,25 +82,86 @@ public:
                     const std::string_view context) const noexcept override;
 
 private:
-  template <typename T, typename LogFunc>
-  std::enable_if_t<
-      std::is_same_v<std::invoke_result_t<LogFunc, DltContextData *, const T>,
-                     DltReturnValue> ||
-          std::is_same_v<
-              std::invoke_result_t<LogFunc, DltContextData *, const T &>,
-              DltReturnValue>,
-      DltReturnValue>
-  LogImpl(const SlotHandle &slot_handle, const T &data,
-          LogFunc log_func) noexcept {
+  template <typename T>
+  DltReturnValue
+  LogImpl(const SlotHandle &slot_handle, const T &data)
+       noexcept {
 
-    auto it = contextDataMap_.find(
+    auto found_element = contextDataMap_.find(
         static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
-    if (it != contextDataMap_.end()) {
-      return log_func(&it->second, data);
+    if (found_element == contextDataMap_.end()) {
+        return DLT_RETURN_ERROR;
     }
 
-    return DLT_RETURN_ERROR;
+    if constexpr (std::is_same_v<T, bool>) {
+        return dlt_->LogBool(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::uint8_t>) {
+        return dlt_->LogUint8(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::int8_t>) {
+        return dlt_->LogInt8(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::uint16_t>) {
+        return dlt_->LogUint16(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::int16_t>) {
+        return dlt_->LogInt16(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::uint32_t>) {
+        return dlt_->LogUint32(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::int32_t>) {
+        return dlt_->LogInt32(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::uint64_t>) {
+        return dlt_->LogUint64(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::int64_t>) {
+        return dlt_->LogInt64(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, float>) {
+        return dlt_->LogFloat32(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, double>) {
+        return dlt_->LogFloat64(&found_element->second, data);
+    }
+    else if constexpr (std::is_same_v<T, std::string_view>) {
+        return dlt_->LogString(&found_element->second, data.data());
+    }
+    else if constexpr (std::is_same_v<T, LogHex8>) {
+        return dlt_->LogUint8Formatted(&found_element->second, data.value, DLT_FORMAT_HEX8);
+    }
+    else if constexpr (std::is_same_v<T, LogHex16>) {
+        return dlt_->LogUint16Formatted(&found_element->second, data.value, DLT_FORMAT_HEX16);
+    }
+    else if constexpr (std::is_same_v<T, LogHex32>) {
+        return dlt_->LogUint32Formatted(&found_element->second, data.value, DLT_FORMAT_HEX32);
+    }
+    else if constexpr (std::is_same_v<T, LogHex64>) {
+        return dlt_->LogUint64Formatted(&found_element->second, data.value, DLT_FORMAT_HEX64);
+    }
+    else if constexpr (std::is_same_v<T, LogBin8>) {
+        return dlt_->LogUint8Formatted(&found_element->second, data.value, DLT_FORMAT_BIN8);
+    }
+    else if constexpr (std::is_same_v<T, LogBin16>) {
+        return dlt_->LogUint16Formatted(&found_element->second, data.value, DLT_FORMAT_BIN16);
+    }
+    else if constexpr (std::is_same_v<T, LogRawBuffer>) {
+        return dlt_->LogString(&found_element->second, data.data());
+    }
+    else if constexpr (std::is_same_v<T, LogSlog2Message>) {
+        return dlt_->LogString(&found_element->second, data.GetMessage().data());
+    }
+    else {
+        static_assert(sizeof(T) == 0, "Unsupported type for LogImpl");
+        return DLT_RETURN_ERROR;
+    }
   }
+
+  // Special handling for LogBin32 and LogBin64 which need multiple DLT calls
+  DltReturnValue LogImplBin32(const SlotHandle &slot_handle, const LogBin32 &data) noexcept;
+  DltReturnValue LogImplBin64(const SlotHandle &slot_handle, const LogBin64 &data) noexcept;
 
   Configuration config_;
 

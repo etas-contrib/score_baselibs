@@ -56,7 +56,6 @@ std::unique_ptr<Recorder> RecorderFactory::CreateRecorderFromLogMode(
     {
         case LogMode::kRemote:
         {
-            std::cout << "Remote\n";
             RemoteRecorderFactoryType remote_recorder_factory;
             recorder = remote_recorder_factory.CreateLogRecorder(config, memory_resource);
             break;

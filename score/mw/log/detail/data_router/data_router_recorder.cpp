@@ -101,181 +101,126 @@ void DataRouterRecorder::StopRecord(const SlotHandle &slot) noexcept {
 };
 
 void DataRouterRecorder::Log(const SlotHandle &slot, const bool data) noexcept {
-  auto log_bool = [&dlt_ = dlt_](DltContextData *ctx, const bool value) -> DltReturnValue {
-    return dlt_->LogBool(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_bool));
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::uint8_t data) noexcept {
-  auto log_uint8 = [&dlt_ = dlt_](DltContextData *ctx, const std::uint8_t value) -> DltReturnValue {
-    return dlt_->LogUint8(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_uint8));
-};
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::int8_t data) noexcept {
-  auto log_int8 = [&dlt_ = dlt_](DltContextData *ctx, const std::int8_t value) -> DltReturnValue {
-    return dlt_->LogInt8(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_int8));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::uint8_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::uint16_t data) noexcept {
-  auto log_uint16 = [&dlt_ = dlt_](DltContextData *ctx, const std::uint16_t value) -> DltReturnValue {
-    return dlt_->LogUint16(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_uint16));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::int8_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::int16_t data) noexcept {
-  auto log_int16 = [&dlt_ = dlt_](DltContextData *ctx, const std::int16_t value) -> DltReturnValue {
-    return dlt_->LogInt16(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_int16));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::uint16_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::uint32_t data) noexcept {
-  auto log_uint32 = [&dlt_ = dlt_](DltContextData *ctx, const std::uint32_t value) -> DltReturnValue {
-    return dlt_->LogUint32(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_uint32));
-};
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::int32_t data) noexcept {
-  auto log_int32 = [&dlt_ = dlt_](DltContextData *ctx, const std::int32_t value) -> DltReturnValue {
-    return dlt_->LogInt32(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_int32));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::int16_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::uint64_t data) noexcept {
-  auto log_uint64 = [&dlt_ = dlt_](DltContextData *ctx, const std::uint64_t value) -> DltReturnValue {
-    return dlt_->LogUint64(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_uint64));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::uint32_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::int64_t data) noexcept {
-  auto log_int64 = [&dlt_ = dlt_](DltContextData *ctx, const std::int64_t value) -> DltReturnValue {
-    return dlt_->LogInt64(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_int64));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::int32_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const float data) noexcept {
-  auto log_float32 = [&dlt_ = dlt_](DltContextData *ctx, const float value) -> DltReturnValue {
-    return dlt_->LogFloat32(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_float32));
-};
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const double data) noexcept {
-  auto log_float64 = [&dlt_ = dlt_](DltContextData *ctx, const double value) -> DltReturnValue {
-    return dlt_->LogFloat64(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data, log_float64));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::uint64_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const std::string_view data) noexcept {
-  auto log_string = [&dlt_ = dlt_](DltContextData *ctx, const std::string_view value) -> DltReturnValue {
-    return dlt_->LogString(ctx, value.data());
-  };
-  static_cast<void>(LogImpl(slot, data, log_string));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::int64_t data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogHex8 data) noexcept {
-  auto log_hex = [&dlt_ = dlt_](DltContextData *ctx, const LogHex8 value) -> DltReturnValue {
-    return dlt_->LogUint8Formatted(ctx, value.value, DLT_FORMAT_HEX8);
-  };
-  static_cast<void>(LogImpl(slot, data, log_hex));
+void DataRouterRecorder::Log(const SlotHandle &slot, const float data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogHex16 data) noexcept {
-  auto log_hex = [&dlt_ = dlt_](DltContextData *ctx, const LogHex16 value) -> DltReturnValue {
-    return dlt_->LogUint16Formatted(ctx, value.value, DLT_FORMAT_HEX16);
-  };
-  static_cast<void>(LogImpl(slot, data, log_hex));
+void DataRouterRecorder::Log(const SlotHandle &slot, const double data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogHex32 data) noexcept {
-  auto log_hex = [&dlt_ = dlt_](DltContextData *ctx, const LogHex32 value) -> DltReturnValue {
-    return dlt_->LogUint32Formatted(ctx, value.value, DLT_FORMAT_HEX32);
-  };
-  static_cast<void>(LogImpl(slot, data, log_hex));
+void DataRouterRecorder::Log(const SlotHandle &slot, const std::string_view data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogHex64 data) noexcept {
-  auto log_hex = [&dlt_ = dlt_](DltContextData *ctx, const LogHex64 value) -> DltReturnValue {
-    return dlt_->LogUint64Formatted(ctx, value.value, DLT_FORMAT_HEX64);
-  };
-  static_cast<void>(LogImpl(slot, data, log_hex));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogHex8 data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogBin8 data) noexcept {
-  auto log_bin = [&dlt_ = dlt_](DltContextData *ctx, const LogBin8 value) -> DltReturnValue {
-    return dlt_->LogUint8Formatted(ctx, value.value, DLT_FORMAT_BIN8);
-  };
-  static_cast<void>(LogImpl(slot, data, log_bin));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogHex16 data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogBin16 data) noexcept {
-  auto log_bin = [&dlt_ = dlt_](DltContextData *ctx, const LogBin16 value) -> DltReturnValue {
-    return dlt_->LogUint16Formatted(ctx, value.value, DLT_FORMAT_BIN16);
-  };
-  static_cast<void>(LogImpl(slot, data, log_bin));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogHex32 data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogBin32 data) noexcept {
-  auto log_bin = [&dlt_ = dlt_](DltContextData *ctx, const std::uint16_t value) -> DltReturnValue {
-    return dlt_->LogUint16Formatted(ctx, value, DLT_FORMAT_BIN16);
-  };
-
-  static_cast<void>(LogImpl(slot, static_cast<std::uint16_t>((data.value >> 16U) & 0x0000FFFFU), log_bin));
-  static_cast<void>(LogImpl(slot, static_cast<std::uint16_t>(data.value & 0x0000FFFFU), log_bin));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogHex64 data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogBin64 data) noexcept {
-  auto log_bin = [&dlt_ = dlt_](DltContextData *ctx, const std::uint16_t value) -> DltReturnValue {
-    return dlt_->LogUint16Formatted(ctx, value, DLT_FORMAT_BIN16);
-  };
-  static_cast<void>(LogImpl(slot, static_cast<std::uint16_t>((data.value >> 48U) & 0x000000000000FFFFU), log_bin));
-  static_cast<void>(LogImpl(slot, static_cast<std::uint16_t>((data.value >> 32U) & 0x000000000000FFFFU), log_bin));
-  static_cast<void>(LogImpl(slot, static_cast<std::uint16_t>((data.value >> 16U) & 0x000000000000FFFFU), log_bin));
-  static_cast<void>(LogImpl(slot, static_cast<std::uint16_t>(data.value & 0x000000000000FFFFU), log_bin));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogBin8 data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogRawBuffer data) noexcept {
-  auto log_string = [&dlt_ = dlt_](DltContextData *ctx, const char* value) -> DltReturnValue {
-    return dlt_->LogString(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data.data(), log_string));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogBin16 data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
 };
 
-void DataRouterRecorder::Log(const SlotHandle &slot,
-                             const LogSlog2Message data) noexcept {
-  auto log_string = [&dlt_ = dlt_](DltContextData *ctx, const char* value) -> DltReturnValue {
-    return dlt_->LogString(ctx, value);
-  };
-  static_cast<void>(LogImpl(slot, data.GetMessage().data(), log_string));
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogBin32 data) noexcept {
+  static_cast<void>(LogImplBin32(slot, data));
 };
+
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogBin64 data) noexcept {
+  static_cast<void>(LogImplBin64(slot, data));
+};
+
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogRawBuffer data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
+};
+
+void DataRouterRecorder::Log(const SlotHandle &slot, const LogSlog2Message data) noexcept {
+  static_cast<void>(LogImpl(slot, data));
+};
+
+// Special implementations for LogBin32 and LogBin64
+DltReturnValue DataRouterRecorder::LogImplBin32(const SlotHandle &slot_handle, const LogBin32 &data) noexcept {
+  auto it = contextDataMap_.find(static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
+  if (it == contextDataMap_.end()) {
+    return DLT_RETURN_ERROR;
+  }
+
+  // LogBin32 needs to be split into two 16-bit values
+  auto result1 = dlt_->LogUint16Formatted(&it->second, static_cast<std::uint16_t>((data.value >> 16U) & 0x0000FFFFU), DLT_FORMAT_BIN16);
+  auto result2 = dlt_->LogUint16Formatted(&it->second, static_cast<std::uint16_t>(data.value & 0x0000FFFFU), DLT_FORMAT_BIN16);
+  
+  // Return the first error encountered, or OK if both succeed
+  return (result1 < 0) ? result1 : result2;
+}
+
+DltReturnValue DataRouterRecorder::LogImplBin64(const SlotHandle &slot_handle, const LogBin64 &data) noexcept {
+  auto it = contextDataMap_.find(static_cast<int>(slot_handle.GetSlotOfSelectedRecorder()));
+  if (it == contextDataMap_.end()) {
+    return DLT_RETURN_ERROR;
+  }
+
+  // LogBin64 needs to be split into four 16-bit values
+  auto result1 = dlt_->LogUint16Formatted(&it->second, static_cast<std::uint16_t>((data.value >> 48U) & 0x000000000000FFFFU), DLT_FORMAT_BIN16);
+  auto result2 = dlt_->LogUint16Formatted(&it->second, static_cast<std::uint16_t>((data.value >> 32U) & 0x000000000000FFFFU), DLT_FORMAT_BIN16);
+  auto result3 = dlt_->LogUint16Formatted(&it->second, static_cast<std::uint16_t>((data.value >> 16U) & 0x000000000000FFFFU), DLT_FORMAT_BIN16);
+  auto result4 = dlt_->LogUint16Formatted(&it->second, static_cast<std::uint16_t>(data.value & 0x000000000000FFFFU), DLT_FORMAT_BIN16);
+  
+  // Return the first error encountered, or OK if all succeed
+  if (result1 < 0) return result1;
+  if (result2 < 0) return result2;
+  if (result3 < 0) return result3;
+  return result4;
+}
 
 bool DataRouterRecorder::IsLogEnabled(
     const LogLevel &log_level, const std::string_view context) const noexcept {

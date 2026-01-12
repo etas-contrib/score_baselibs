@@ -58,6 +58,7 @@ cc_library(
         "flexible_circular_allocator_interface",
         "@score_baselibs//score/analysis/tracing/common/flexible_circular_allocator/error_codes/lockless_flexible_circular_allocator:error_code",
         "@score_baselibs//score/analysis/tracing/common/interface_types:generic_trace_api_types",
+        "@score_baselibs//score/analysis/tracing/common/utilities:tracing_utils",
         "@score_baselibs//score/analysis/tracing/generic_trace_library/interface_types/error_code",
         "@score_baselibs//score/language/futurecpp",
         "@score_baselibs//score/result",

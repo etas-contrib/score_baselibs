@@ -204,7 +204,9 @@ score::Result<std::uint32_t> LocklessFlexibleCircularAllocator<AtomicIndirectorT
         {
             return new_list_queue_head;
         }
-        allocate_retry_cntr_++;
+        [[maybe_unused]] auto retry_cntr_incr_res =
+                score::analysis::tracing::IncrementWithSaturation<typename atomic_value_type<
+                    decltype(allocate_retry_cntr_)>::type>::IncrementWithSaturationCheck(allocate_retry_cntr_);
     }
     return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kViolatedMaximumRetries);
 }
@@ -238,7 +240,9 @@ score::Result<void*> LocklessFlexibleCircularAllocator<AtomicIndirectorType>::Al
     const std::size_t size,
     const std::size_t alignment_size) noexcept
 {
-    allocate_call_cntr_++;
+    [[maybe_unused]] auto call_cntr_incr_res =
+        score::analysis::tracing::IncrementWithSaturation<typename atomic_value_type<
+            decltype(allocate_call_cntr_)>::type>::IncrementWithSaturationCheck(allocate_call_cntr_);
     // ValidateAndReserveMemory atomically checks availability and reserves memory using CAS
     auto aligned_size_result = ValidateAndReserveMemory(size, alignment_size);
     if (!aligned_size_result.has_value())

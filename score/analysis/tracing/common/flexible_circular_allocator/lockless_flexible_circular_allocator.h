@@ -15,6 +15,7 @@
 #include "score/analysis/tracing/common/flexible_circular_allocator/error_codes/lockless_flexible_circular_allocator/error_code.h"
 #include "score/analysis/tracing/common/flexible_circular_allocator/flexible_circular_allocator_interface.h"
 #include "score/analysis/tracing/common/flexible_circular_allocator/lockless_flexible_circular_allocator_types.h"
+#include "score/analysis/tracing/common/utilities/increment_with_saturation.hpp"
 #include "score/memory/shared/atomic_indirector.h"
 #include "score/memory/shared/managed_memory_resource.h"
 #include <array>
@@ -88,17 +89,17 @@ class LocklessFlexibleCircularAllocator : public IFlexibleCircularAllocator
     std::atomic<std::uint32_t> buffer_queue_head_;
     std::atomic<std::uint32_t> buffer_queue_tail_;
     std::array<std::atomic<ListEntry>, kListEntryArraySize> list_array_;
-    std::atomic<std::uint32_t> list_queue_head_;
-    std::atomic<std::uint32_t> list_queue_tail_;
-    std::atomic<std::uint32_t> available_size_;
-    std::atomic<bool> wrap_around_;
-    std::atomic<std::uint64_t> cumulative_usage_;
-    std::atomic<std::uint32_t> lowest_size_;
-    std::atomic<std::uint32_t> alloc_cntr_;
-    std::atomic<std::uint32_t> dealloc_cntr_;
-    std::atomic<std::uint64_t> allocate_retry_cntr_;
-    std::atomic<std::uint64_t> allocate_call_cntr_;
-    std::atomic<bool> tmd_stats_enabled_;
+    std::atomic<std::uint32_t> list_queue_head_{0};
+    std::atomic<std::uint32_t> list_queue_tail_{0};
+    std::atomic<std::uint32_t> available_size_{0};
+    std::atomic<bool> wrap_around_{false};
+    std::atomic<std::uint64_t> cumulative_usage_{0};
+    std::atomic<std::uint32_t> lowest_size_{0};
+    std::atomic<std::uint32_t> alloc_cntr_{0};
+    std::atomic<std::uint32_t> dealloc_cntr_{0};
+    std::atomic<std::uint32_t> allocate_retry_cntr_{0};
+    std::atomic<std::uint32_t> allocate_call_cntr_{0};
+    std::atomic<bool> tmd_stats_enabled_{false};
 };
 
 }  // namespace tracing

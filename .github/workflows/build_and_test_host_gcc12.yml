@@ -19,8 +19,8 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
   push:
-    branches:
-      - main
+    # branches: # removed for testing purposes
+    #   - main
   merge_group:
     types: [checks_requested]
 jobs:
@@ -39,3 +39,10 @@ jobs:
             bazel test --config bl-x86_64-linux -- //score/... \
             -//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test \
             -//score/containers:dynamic_array_test
+    integration_test:
+      uses: eclipse-score/reference_integration/.github/workflows/reusable_smoke-test.yml@main
+      secrets: inherit
+      with:
+        repo_runner_labels: 'ubuntu-latest'
+        module_name: 'score_baselibs'
+        target_branch: ${{ github.ref }}

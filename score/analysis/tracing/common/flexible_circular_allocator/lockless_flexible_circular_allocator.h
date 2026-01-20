@@ -97,8 +97,8 @@ class LocklessFlexibleCircularAllocator : public IFlexibleCircularAllocator
     std::atomic<std::uint32_t> lowest_size_{0};
     std::atomic<std::uint32_t> alloc_cntr_{0};
     std::atomic<std::uint32_t> dealloc_cntr_{0};
-    std::atomic<std::uint32_t> allocate_retry_cntr_{0};
-    std::atomic<std::uint32_t> allocate_call_cntr_{0};
+    SaturatingIntegral<std::uint32_t> allocate_retry_cntr_;
+    SaturatingIntegral<std::uint32_t> allocate_call_cntr_;
     std::atomic<bool> tmd_stats_enabled_{false};
 };
 

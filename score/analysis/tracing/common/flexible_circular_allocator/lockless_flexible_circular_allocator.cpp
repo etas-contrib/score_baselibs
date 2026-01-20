@@ -124,8 +124,8 @@ void LocklessFlexibleCircularAllocator<AtomicIndirectorType>::GetTmdMemUsage(Tmd
     tmd_stats.tmd_average = cumulative_usage_.exchange(0U) / number_of_allocations;
     tmd_stats.tmd_alloc_rate =
         static_cast<float>(dealloc_cntr_.exchange(0U)) / static_cast<float>(number_of_allocations);
-    tmd_stats.tmd_allocate_retry_cntr = allocate_retry_cntr_.exchange(0U);
-    tmd_stats.tmd_allocate_call_cntr = allocate_call_cntr_.exchange(0U);
+    tmd_stats.tmd_allocate_retry_cntr = allocate_retry_cntr_.Exchange(0U);
+    tmd_stats.tmd_allocate_call_cntr = allocate_call_cntr_.Exchange(0U);
 }
 
 template <template <class> class AtomicIndirectorType>
@@ -204,9 +204,7 @@ score::Result<std::uint32_t> LocklessFlexibleCircularAllocator<AtomicIndirectorT
         {
             return new_list_queue_head;
         }
-        [[maybe_unused]] auto retry_cntr_incr_res =
-                score::analysis::tracing::IncrementWithSaturation<typename atomic_value_type<
-                    decltype(allocate_retry_cntr_)>::type>::IncrementWithSaturationCheck(allocate_retry_cntr_);
+        [[maybe_unused]] auto retry_cntr_incr_res = allocate_retry_cntr_.IncrementWithSaturationCheck();
     }
     return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kViolatedMaximumRetries);
 }
@@ -240,9 +238,7 @@ score::Result<void*> LocklessFlexibleCircularAllocator<AtomicIndirectorType>::Al
     const std::size_t size,
     const std::size_t alignment_size) noexcept
 {
-    [[maybe_unused]] auto call_cntr_incr_res =
-        score::analysis::tracing::IncrementWithSaturation<typename atomic_value_type<
-            decltype(allocate_call_cntr_)>::type>::IncrementWithSaturationCheck(allocate_call_cntr_);
+    [[maybe_unused]] auto call_cntr_incr_res = allocate_call_cntr_.IncrementWithSaturationCheck();
     // ValidateAndReserveMemory atomically checks availability and reserves memory using CAS
     auto aligned_size_result = ValidateAndReserveMemory(size, alignment_size);
     if (!aligned_size_result.has_value())

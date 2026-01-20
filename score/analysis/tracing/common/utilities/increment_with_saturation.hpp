@@ -22,22 +22,19 @@ struct atomic_value_type<std::atomic<T>>
 };
 
 template <typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
-class IncrementWithSaturation
+class SaturatingIntegral
 {
-
-  public:
     static constexpr T FLAG_MASK = 1ULL << (std::numeric_limits<T>::digits - 1);
     static constexpr T COUNTER_MASK = FLAG_MASK - 1;
 
-    IncrementWithSaturation() = delete;
-    ~IncrementWithSaturation() = delete;
+  public:
     // Increments the value atomically with saturation check.
     // If the value is saturated, it will not increment further, and pair::first will be true.
     // pair::second will be true if retries exceeded.
     // Value is successfully incremented only if both pair flags are false.
-    static inline std::pair<bool, bool> IncrementWithSaturationCheck(std::atomic<T>& val)
+    std::pair<bool, bool> IncrementWithSaturationCheck()
     {
-        T old = val.load(std::memory_order_relaxed);
+        T old = value_.load(std::memory_order_relaxed);
         std::uint8_t max_retries = 100;
         while (max_retries-- > 0)
         {
@@ -51,13 +48,36 @@ class IncrementWithSaturation
             }
 
             T counter = old & COUNTER_MASK;
-            if (val.compare_exchange_weak(old, counter + 1, std::memory_order_relaxed, std::memory_order_relaxed))
+            if (value_.compare_exchange_weak(old, counter + 1, std::memory_order_relaxed, std::memory_order_relaxed))
             {
                 return {false, false};
             }
         }
         return {false, true};
     }
+
+    T Load() const
+    {
+        return value_.load(std::memory_order_relaxed) & COUNTER_MASK;
+    }
+
+    bool IsSaturated() const
+    {
+        return (value_.load(std::memory_order_relaxed) & FLAG_MASK) != 0;
+    }
+
+    static bool IsSaturated(T val)
+    {
+        return (val & FLAG_MASK) != 0;
+    }
+
+    T Exchange(T&& val)
+    {
+        return value_.exchange(val, std::memory_order_relaxed);
+    }
+
+  private:
+    std::atomic<T> value_{0};
 };
 
 }  // namespace tracing

@@ -43,6 +43,9 @@ std::string_view score::analysis::tracing::LocklessFlexibleAllocatorErrorDomain:
         case static_cast<score::result::ErrorCode>(LocklessFlexibleAllocatorErrorCode::kAddressNotAligned):
             error_message = "Address is not properly aligned";
             break;
+        case static_cast<score::result::ErrorCode>(LocklessFlexibleAllocatorErrorCode::kRequestedSizeIsTooLarge):
+            error_message = "Requested size is too large, exceeds maximum allowed allocation size";
+            break;
         default:
             error_message = "Unknown error";
             break;

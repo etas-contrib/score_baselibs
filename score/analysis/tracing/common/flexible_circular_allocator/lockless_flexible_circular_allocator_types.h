@@ -25,6 +25,13 @@ namespace tracing
 // False positive, variable is used.
 // coverity[autosar_cpp14_a0_1_1_violation : FALSE]
 constexpr std::uint32_t kListEntryArraySize = 2u * 4096u;
+constexpr std::uint8_t kLengthFieldBits = 31U;
+// Suppress "AUTOSAR C++14 A0-1-1" rule finding. This rule states: "A project shall not contain instances of
+// non-volatile variables being given values that are not subsequently used".
+// False positive, the value is used below to set the bit length of a struct member .
+// coverity[autosar_cpp14_a0_1_1_violation: FALSE]
+constexpr std::uint8_t kFlagFieldBits = 1U;
+constexpr std::uint32_t kMaxPossibleAllocationSize = (static_cast<std::uint32_t>(1U) << kLengthFieldBits) - 1U;
 
 enum class ListEntryFlag : std::uint8_t
 {
@@ -41,8 +48,8 @@ struct alignas(std::max_align_t) BufferBlock
 struct ListEntry
 {
     std::uint32_t offset;
-    std::uint16_t length;
-    uint8_t flags;
+    std::uint32_t length : kLengthFieldBits;
+    std::uint8_t flags : kFlagFieldBits;
 };
 
 inline score::Result<std::size_t> GetAlignedSize(const std::size_t non_aligned_size, std::size_t alignment)

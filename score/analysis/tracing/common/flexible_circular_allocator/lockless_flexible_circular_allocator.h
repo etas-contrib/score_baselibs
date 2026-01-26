@@ -76,7 +76,7 @@ class LocklessFlexibleCircularAllocator : public IFlexibleCircularAllocator
                                              std::uint32_t aligned_size,
                                              std::uint32_t list_entry_element_index) noexcept;
     bool UpdateListEntryForAllocation(std::size_t list_entry_index,
-                                      std::uint16_t aligned_size,
+                                      std::uint32_t aligned_size,
                                       std::uint32_t offset) noexcept;
     score::Result<BufferBlock*> GetValidatedBlock(std::uint32_t offset) noexcept;
     bool ShouldResetBufferTail(std::uint32_t current_tail) const noexcept;

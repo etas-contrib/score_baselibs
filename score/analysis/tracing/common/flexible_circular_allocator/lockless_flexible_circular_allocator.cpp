@@ -157,22 +157,29 @@ score::Result<std::uint32_t> LocklessFlexibleCircularAllocator<AtomicIndirectorT
     {
         return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kOverFlowOccurred);
     }
-    const auto aligned_size_u32 = static_cast<std::uint32_t>(aligned_size);
 
-    // Atomically check and reserve memory using CAS loop to prevent race conditions.
-    // This ensures that the availability check and memory reservation happen as one atomic operation.
-    std::uint32_t available = available_size_.load(std::memory_order_seq_cst);
-    while (true)
+    const auto aligned_size_u32 = static_cast<std::uint32_t>(aligned_size);
+    bool subtraction_successful = false;
+    for (uint8_t retries = 0U; retries < kMaxRetries; retries++)
     {
+        std::uint32_t available = available_size_.load(std::memory_order_seq_cst);
         if (aligned_size_u32 >= available)
         {
             return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kNotEnoughMemory);
         }
-        if (available_size_.compare_exchange_weak(
-                available, available - aligned_size_u32, std::memory_order_seq_cst, std::memory_order_seq_cst))
+        if (AtomicIndirectorType<decltype(available_size_.load())>::compare_exchange_weak(available_size_,
+                                                                                          available,
+                                                                                          available - aligned_size_u32,
+                                                                                          std::memory_order_seq_cst,
+                                                                                          std::memory_order_seq_cst))
         {
+            subtraction_successful = true;
             break;
         }
+    }
+    if (!subtraction_successful)
+    {
+        return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kViolatedMaximumRetries);
     }
     return aligned_size_u32;
 }
@@ -433,9 +440,10 @@ ResultBlank LocklessFlexibleCircularAllocator<AtomicIndirectorType>::IterateBloc
         if (ValidateListEntryIndex(index))  // LCOV_EXCL_BR_LINE not testable
         // see comment above.
         {
-            if ((AtomicIndirectorType<ListEntry>::load(
-                     list_array_.at(static_cast<size_t>(current_block->list_entry_offset)), std::memory_order_seq_cst)
-                     .flags) == static_cast<std::uint8_t>(ListEntryFlag::kFree))
+            if (static_cast<std::uint8_t>(AtomicIndirectorType<ListEntry>::load(
+                                              list_array_.at(static_cast<size_t>(current_block->list_entry_offset)),
+                                              std::memory_order_seq_cst)
+                                              .flags) == static_cast<std::uint8_t>(ListEntryFlag::kFree))
             {
                 auto free_block_result = FreeBlock(*current_block);
                 // Check if FreeBlock encountered an error
@@ -687,11 +695,11 @@ score::Result<uint8_t*> LocklessFlexibleCircularAllocator<AtomicIndirectorType>:
     {
         return MakeUnexpected<uint8_t*>(allocated_address.error());  // Out-of-bounds offset detected
     }
-    if (aligned_size > std::numeric_limits<std::uint16_t>::max())
+
+    if (aligned_size > kMaxPossibleAllocationSize)
     {
-        // Return early if aligned_size exceeds the maximum value representable by std::uint16_t,
-        // since list_entry_new.length is a std::uint16_t and cannot hold a larger value.
-        return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kOverFlowOccurred);
+        // Return early if aligned_size exceeds the maximum value representable by 31 bits.
+        return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kRequestedSizeIsTooLarge);
     }
 
     // Validate list_entry_element_index before using it to prevent out-of-bounds access
@@ -708,7 +716,7 @@ template <template <class> class AtomicIndirectorType>
 // coverity[autosar_cpp14_a15_5_3_violation]
 bool LocklessFlexibleCircularAllocator<AtomicIndirectorType>::UpdateListEntryForAllocation(
     std::size_t list_entry_index,
-    std::uint16_t aligned_size,
+    std::uint32_t aligned_size,
     std::uint32_t offset) noexcept
 {
     for (uint8_t retries = 0U; retries < kMaxRetries; retries++)
@@ -716,7 +724,7 @@ bool LocklessFlexibleCircularAllocator<AtomicIndirectorType>::UpdateListEntryFor
         auto list_entry_old = list_array_.at(list_entry_index).load();
         auto list_entry_new = list_entry_old;
         list_entry_new.flags = static_cast<std::uint8_t>(ListEntryFlag::kInUse);
-        list_entry_new.length = aligned_size;
+        list_entry_new.length = (aligned_size & kMaxPossibleAllocationSize);
         list_entry_new.offset = offset;
         if (AtomicIndirectorType<ListEntry>::compare_exchange_strong(
                 list_array_.at(list_entry_index), list_entry_old, list_entry_new, std::memory_order_seq_cst) == true)
@@ -756,12 +764,10 @@ score::Result<std::uint8_t*> LocklessFlexibleCircularAllocator<AtomicIndirectorT
     {
         return MakeUnexpected<uint8_t*>(allocated_address.error());
     }
-    // Suppress "AUTOSAR C++14 A4-7-1" rule finding. This rule states: "An integer expression shall
-    // not lead to data loss.".
-    // Rationale: Narrowing conversion validity is ensured by SetupBlockMetadata()
+
     if (!UpdateListEntryForAllocation(static_cast<std::size_t>(list_entry_element_index),
                                       // coverity[autosar_cpp14_a4_7_1_violation]
-                                      static_cast<std::uint16_t>(aligned_size),
+                                      aligned_size,
                                       new_buffer_queue_head))
     {
         return MakeUnexpected(
@@ -831,7 +837,7 @@ score::Result<uint8_t*> LocklessFlexibleCircularAllocator<AtomicIndirectorType>:
     // Rationale: Narrowing conversion validity is ensured by SetupBlockMetadata()
     if (!UpdateListEntryForAllocation(static_cast<std::size_t>(list_entry_element_index),
                                       // coverity[autosar_cpp14_a4_7_1_violation]
-                                      static_cast<std::uint16_t>(aligned_size),
+                                      aligned_size,
                                       list_entry_offset))
     {
         return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kViolatedMaximumRetries);
@@ -903,11 +909,7 @@ score::Result<uint8_t*> LocklessFlexibleCircularAllocator<AtomicIndirectorType>:
 template <template <class> class AtomicIndirectorType>
 void LocklessFlexibleCircularAllocator<AtomicIndirectorType>::IncrementAvailableSize(std::uint32_t delta) noexcept
 {
-    auto current = available_size_.load(std::memory_order_seq_cst);
-    while (!available_size_.compare_exchange_weak(
-        current, current + delta, std::memory_order_seq_cst, std::memory_order_seq_cst))
-    {
-    }
+    std::ignore = available_size_.fetch_add(delta, std::memory_order_seq_cst);
 }
 
 template class LocklessFlexibleCircularAllocator<score::memory::shared::AtomicIndirectorReal>;

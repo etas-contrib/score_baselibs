@@ -35,6 +35,7 @@ enum class LocklessFlexibleAllocatorErrorCode : score::result::ErrorCode
     kInvalidDeallocationAddress,
     kInvalidOffsetValue,
     kAddressNotAligned,
+    kRequestedSizeIsTooLarge
 };
 
 class LocklessFlexibleAllocatorErrorDomain final : public score::result::ErrorDomain

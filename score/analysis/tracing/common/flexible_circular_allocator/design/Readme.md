@@ -63,13 +63,13 @@ reference: [false sharing](https://en.wikipedia.org/wiki/False_sharing)
 
 ### ListEntry Structure
 
-`ListEntry` is a struct which holds the metadata of a memory block: the offset in buffer_queue, the length of the block, and a flag to indicate whether the block is free or used. Each block has an associated `ListEntry` element in the `list_array_`.
+`ListEntry` is a struct which holds the metadata of a memory block: the offset in buffer_queue, the length of the block, and a flag to indicate whether the block is free or used. Each block has an associated `ListEntry` element in the `list_array_`. The length is represented using 31 bits which is around 2Gbytes, while the remaining bit is used as a flag to indicate whether the block is currently in use or free.
 
 ```c
 struct ListEntry {
     uint32_t offset;
-    uint16_t length;
-    uint8_t flags;
+    uint32_t length : 31;
+    uint8_t flags : 1;
 };
 ```
 

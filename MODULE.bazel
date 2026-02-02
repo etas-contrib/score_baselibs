@@ -74,8 +74,8 @@ bazel_dep(name = "score_platform", version = "0.5.1")  # This is main score repo
 
 git_override(
     module_name = "score_platform",
-    remote = "https://github.com/etas-contrib/score_score.git",
-    branch = "arsibo_dr_005_poc",
+    commit = "6829d691dfd4521ce376e22400bb104197967b7c",
+    remote = "https://github.com/eclipse-score/score.git",
 )
 bazel_dep(name = "score_tooling", version = "1.0.4")
 

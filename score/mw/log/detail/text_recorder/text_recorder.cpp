@@ -33,19 +33,19 @@ inline void GenericLog(const SlotHandle& slot_handle, detail::Backend& backend, 
 {
     auto& log_record = backend.GetLogRecord(slot_handle);
 
-    detail::DltArgumentCounter counter{log_record.getLogEntry().num_of_args};
+    detail::DltArgumentCounter counter{log_record.GetLogEntry().num_of_args};
     std::ignore = counter.TryAddArgument([data, &log_record]() noexcept {
-        if (log_record.getVerbosePayload()
+        if (log_record.GetVerbosePayload()
                 .RemainingCapacity() >  // LCOV_EXCL_BR_LINE: lcov complains about lots of uncovered branches, it is
                                         // not convenient/related to this condition.
             0U)
         {
-            detail::TextFormat::Log(log_record.getVerbosePayload(), data);
-            return detail::AddArgumentResult::Added;
+            detail::TextFormat::Log(log_record.GetVerbosePayload(), data);
+            return detail::AddArgumentResult::kAdded;
         }
         else
         {
-            return detail::AddArgumentResult::NotAdded;
+            return detail::AddArgumentResult::kNotAdded;
         }
     });
 }
@@ -56,7 +56,7 @@ inline void SlogGenericLog(const SlotHandle& slot_handle, detail::Backend& backe
 // coverity[autosar_cpp14_a16_0_1_violation]
 #if defined __QNX__
     auto& log_record = backend.GetLogRecord(slot_handle);
-    auto& log_entry = log_record.getLogEntry();
+    auto& log_entry = log_record.GetLogEntry();
     log_entry.slog2_code = data.GetCode();
 // QNX-specific recorder
 // coverity[autosar_cpp14_a16_0_1_violation]
@@ -89,14 +89,14 @@ score::cpp::optional<SlotHandle> TextRecorder::StartRecord(const std::string_vie
     if (slot_handle.has_value())
     {
         auto& payload = backend_->GetLogRecord(slot_handle.value());
-        auto& log_entry = payload.getLogEntry();
+        auto& log_entry = payload.GetLogEntry();
 
         const auto app_id = config_.GetAppId();
         log_entry.app_id = detail::LoggingIdentifier{app_id};
         log_entry.ctx_id = detail::LoggingIdentifier{context_id};
         log_entry.num_of_args = 0U;
         log_entry.log_level = log_level;
-        payload.getVerbosePayload().Reset();
+        payload.GetVerbosePayload().Reset();
     }
 
     return slot_handle;

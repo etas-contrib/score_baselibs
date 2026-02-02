@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#ifndef SCORE_MW_LOG_ERROR_H
-#define SCORE_MW_LOG_ERROR_H
+#ifndef SCORE_MW_LOG_DETAIL_ERROR_H
+#define SCORE_MW_LOG_DETAIL_ERROR_H
 
 #include "score/result/error.h"
 
@@ -59,4 +59,4 @@ score::result::Error MakeError(const score::mw::log::detail::Error code, const s
 }  // namespace mw
 }  // namespace score
 
-#endif  // SCORE_MW_LOG_ERROR_H
+#endif  // SCORE_MW_LOG_DETAIL_ERROR_H

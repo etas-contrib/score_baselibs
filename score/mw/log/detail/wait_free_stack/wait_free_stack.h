@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#ifndef SCORE_MW_LOG_DETAIL_WAIT_FREE_STACK_H
-#define SCORE_MW_LOG_DETAIL_WAIT_FREE_STACK_H
+#ifndef SCORE_MW_LOG_DETAIL_WAIT_FREE_STACK_WAIT_FREE_STACK_H
+#define SCORE_MW_LOG_DETAIL_WAIT_FREE_STACK_WAIT_FREE_STACK_H
 
 #include "score/callback.hpp"
 #include "score/optional.hpp"
@@ -127,4 +127,4 @@ auto WaitFreeStack<Element, AtomicIndirectorType>::Find(const FindPredicate<Elem
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_DETAIL_WAIT_FREE_STACK_WAIT_FREE_STACK_H

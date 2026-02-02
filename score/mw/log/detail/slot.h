@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#ifndef PLATFORM_CIRCULAR_ALLOCATOR_SLOT_H
-#define PLATFORM_CIRCULAR_ALLOCATOR_SLOT_H
+#ifndef SCORE_MW_LOG_DETAIL_SLOT_H
+#define SCORE_MW_LOG_DETAIL_SLOT_H
 
 #include <atomic>
 
@@ -31,7 +31,7 @@ class Slot
   public:
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init): false positive, this constructor delegates to another one
     Slot() : Slot(T{}) {};
-    explicit Slot(const T& initialValue) : data_{initialValue}, in_use_{false} {}
+    explicit Slot(const T& initial_value) : data_{initial_value}, in_use_{false} {}
 
     ~Slot() = default;
     Slot(const Slot&) noexcept = delete;
@@ -86,4 +86,4 @@ class Slot
 }  // namespace mw
 }  // namespace score
 
-#endif  // PLATFORM_CIRCULAR_ALLOCATOR_SLOT_H
+#endif  // SCORE_MW_LOG_DETAIL_SLOT_H

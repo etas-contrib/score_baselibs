@@ -45,7 +45,7 @@ class TextMessageBuilderFixture : public ::testing::TestWithParam<LogLevel>
   public:
     void SetUp() override
     {
-        auto& log_entry = log_record_.getLogEntry();
+        auto& log_entry = log_record_.GetLogEntry();
 
         log_entry.app_id = LoggingIdentifier{"TMB"};
         log_entry.ctx_id = LoggingIdentifier{"CTX"};
@@ -138,7 +138,7 @@ TEST_P(TextMessageBuilderFixture, HeaderShallHaveLevelPrintedForAllParams)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    auto& log_entry = log_record_.getLogEntry();
+    auto& log_entry = log_record_.GetLogEntry();
     log_entry.log_level = GetParam();
     std::string level_string{kLevels.at(GetParam())};
     unit_.SetNextMessage(log_record_);
@@ -157,7 +157,7 @@ TEST_F(TextMessageBuilderFixture, LogLevelToStringShouldReturnUndefinedForInvali
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    auto& log_entry = log_record_.getLogEntry();
+    auto& log_entry = log_record_.GetLogEntry();
 
     // Create an invalid log level by casting back to LogLevel
     log_entry.log_level = static_cast<LogLevel>(static_cast<std::underlying_type<LogLevel>::type>(999));

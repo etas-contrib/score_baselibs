@@ -89,11 +89,11 @@ std::string_view score::mw::log::detail::ErrorDomain::MessageFor(const score::re
 
 namespace
 {
-constexpr score::mw::log::detail::ErrorDomain mw_log_error_domain;
+constexpr score::mw::log::detail::ErrorDomain kMwLogErrorDomain;
 }
 
 score::result::Error score::mw::log::detail::MakeError(const score::mw::log::detail::Error code,
                                                    const std::string_view user_message) noexcept
 {
-    return {static_cast<score::result::ErrorCode>(code), mw_log_error_domain, user_message};
+    return {static_cast<score::result::ErrorCode>(code), kMwLogErrorDomain, user_message};
 }

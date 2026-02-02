@@ -71,15 +71,15 @@ TEST_F(SlotFixture, TryUseSetsSlotInUse)
     EXPECT_FALSE(slot.IsUsed());
 
     // When we call TryUse()
-    bool firstAttempt = slot.TryUse();
+    bool first_attempt = slot.TryUse();
 
     // Then it should succeed and the slot is now in use
-    EXPECT_TRUE(firstAttempt);
+    EXPECT_TRUE(first_attempt);
     EXPECT_TRUE(slot.IsUsed());
 
     // If we try again, it should fail because it's already in use
-    bool secondAttempt = slot.TryUse();
-    EXPECT_FALSE(secondAttempt);
+    bool second_attempt = slot.TryUse();
+    EXPECT_FALSE(second_attempt);
     EXPECT_TRUE(slot.IsUsed());
 }
 
@@ -140,7 +140,7 @@ TEST_F(SlotFixture, ConcurrentTryUseStressTest)
 
     // Exactly one thread should have successfully claimed the slot
     auto successes = std::count(results.begin(), results.end(), true);
-    EXPECT_EQ(successes, 1u);
+    EXPECT_EQ(successes, 1U);
 
     // And slot should be in use
     EXPECT_TRUE(slot.IsUsed());

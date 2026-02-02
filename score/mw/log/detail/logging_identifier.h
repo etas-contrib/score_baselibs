@@ -70,7 +70,7 @@ class LoggingIdentifier
 
     // This variable is public because of necessity to pass it to STRUCT_VISITABLE in log_entry.h
     // coverity[autosar_cpp14_m11_0_1_violation]
-    std::array<std::string_view::value_type, kMaxLength> data_{};
+    std::array<std::string_view::value_type, kMaxLength> data{};
 };
 
 // NOLINTBEGIN(score-struct-usage-compliance) justified by design
@@ -81,7 +81,7 @@ class LoggingIdentifier
 // coverity[autosar_cpp14_a7_1_2_violation]
 // coverity[autosar_cpp14_a0_1_1_violation]
 // coverity[autosar_cpp14_a2_10_4_violation]
-STRUCT_VISITABLE(LoggingIdentifier, data_)
+STRUCT_VISITABLE(LoggingIdentifier, data)
 
 // NOLINTEND(score-struct-usage-compliance) justified by design
 
@@ -90,4 +90,4 @@ STRUCT_VISITABLE(LoggingIdentifier, data_)
 }  // namespace mw
 }  // namespace score
 
-#endif  // SCORE_MW_LOG_DETAIL_RUNTIME_H
+#endif  // SCORE_MW_LOG_DETAIL_LOGGING_IDENTIFIER_H

@@ -45,10 +45,10 @@ class ReservedData
                         : reserve_size;
 
         //  casting constant value to more capable type:
-        constexpr auto max_signed_type_size = static_cast<std::size_t>(std::numeric_limits<const std::int32_t>::max());
+        constexpr auto kMaxSignedTypeSize = static_cast<std::size_t>(std::numeric_limits<const std::int32_t>::max());
         //  limit value to maximum positive value of signed integer because data types with both signed and unsigned
         //  size types are mixed
-        reserved_ = std::min(max_signed_type_size, reserved_);
+        reserved_ = std::min(kMaxSignedTypeSize, reserved_);
 
         std::size_t new_size = helper::HandleAddOverflow(reserved_, old_size_);
         buffer_.resize(new_size);
@@ -113,8 +113,8 @@ void VerbosePayload::Put(const Byte* const data, const std::size_t length) noexc
     }
 
     // data == nullptr is only problematic if length != 0
-    const auto isPointerValid = data != nullptr;
-    if (isPointerValid == false)
+    const auto is_pointer_valid = data != nullptr;
+    if (is_pointer_valid == false)
     {
         return;
     }
@@ -146,9 +146,9 @@ score::cpp::span<const std::uint8_t> VerbosePayload::GetSpan() const noexcept
 {
     //  Checking for sign overflow. Limit data to maximum possible span size:
     using size_type = score::cpp::span<const std::uint8_t>::size_type;
-    constexpr auto max_size = std::numeric_limits<const size_type>::max();
+    constexpr auto kMaxSize = std::numeric_limits<const size_type>::max();
 
-    const auto span_size = static_cast<size_type>(std::min(static_cast<std::size_t>(max_size), buffer_.get().size()));
+    const auto span_size = static_cast<size_type>(std::min(static_cast<std::size_t>(kMaxSize), buffer_.get().size()));
 
     // NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast) justification provided
     // reinterpret_cast due to handling raw data

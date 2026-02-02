@@ -26,16 +26,16 @@ namespace detail
 
 DltArgumentCounter::DltArgumentCounter(std::uint8_t& counter) noexcept : counter_(counter) {}
 
-AddArgumentResult DltArgumentCounter::TryAddArgument(add_argument_callback callback) noexcept
+AddArgumentResult DltArgumentCounter::TryAddArgument(AddArgumentCallback callback) noexcept
 {
-    constexpr uint8_t MAX_COUNTER = std::numeric_limits<std::remove_reference<decltype(counter_)>::type>::max();
-    if (counter_ == MAX_COUNTER)
+    constexpr uint8_t kMaxCounter = std::numeric_limits<std::remove_reference<decltype(counter_)>::type>::max();
+    if (counter_ == kMaxCounter)
     {
-        return AddArgumentResult::NotAdded;
+        return AddArgumentResult::kNotAdded;
     }
 
     const auto result = callback();
-    if (result == AddArgumentResult::Added)
+    if (result == AddArgumentResult::kAdded)
     {
         counter_++;
     }

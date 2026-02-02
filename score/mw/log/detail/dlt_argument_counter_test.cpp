@@ -33,8 +33,8 @@ TEST(DltArgumentCounterShould, IncreaseCounter)
 
     uint8_t counter = 0;
     DltArgumentCounter sut{counter};
-    EXPECT_EQ(AddArgumentResult::Added, sut.TryAddArgument([]() noexcept {
-        return AddArgumentResult::Added;
+    EXPECT_EQ(AddArgumentResult::kAdded, sut.TryAddArgument([]() noexcept {
+        return AddArgumentResult::kAdded;
     }));
     EXPECT_EQ(counter, 1);
 }
@@ -49,8 +49,8 @@ TEST(DltArgumentCounterShould, NotIncreaseCounterBecauseArgumentNotAdded)
 
     uint8_t counter = 0;
     DltArgumentCounter sut{counter};
-    EXPECT_EQ(AddArgumentResult::NotAdded, sut.TryAddArgument([]() noexcept {
-        return AddArgumentResult::NotAdded;
+    EXPECT_EQ(AddArgumentResult::kNotAdded, sut.TryAddArgument([]() noexcept {
+        return AddArgumentResult::kNotAdded;
     }));
     EXPECT_EQ(counter, 0);
 }
@@ -65,8 +65,8 @@ TEST(DltArgumentCounterShould, NotIncreaseCounterBecauseMaxCounterReached)
 
     uint8_t counter = 255;
     DltArgumentCounter sut{counter};
-    EXPECT_EQ(AddArgumentResult::NotAdded, sut.TryAddArgument([]() noexcept {
-        return AddArgumentResult::Added;
+    EXPECT_EQ(AddArgumentResult::kNotAdded, sut.TryAddArgument([]() noexcept {
+        return AddArgumentResult::kAdded;
     }));
     EXPECT_EQ(counter, 255);
 }
@@ -83,8 +83,8 @@ TEST(DltArgumentCounterShould, NotIncreaseCounterBecauseMaxCounterReachedAndNoAr
 
     uint8_t counter = 255;
     DltArgumentCounter sut{counter};
-    EXPECT_EQ(AddArgumentResult::NotAdded, sut.TryAddArgument([]() noexcept {
-        return AddArgumentResult::NotAdded;
+    EXPECT_EQ(AddArgumentResult::kNotAdded, sut.TryAddArgument([]() noexcept {
+        return AddArgumentResult::kNotAdded;
     }));
     EXPECT_EQ(counter, 255);
 }

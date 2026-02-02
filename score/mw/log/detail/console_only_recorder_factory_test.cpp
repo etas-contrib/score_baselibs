@@ -43,9 +43,9 @@ TEST(RecorderFactoryStubTest, CreateStubShallReturnEmptyRecorderforCreateRecorde
 
     auto recorder_factory = CreateRecorderFactory();
 
-    auto recorder_ = recorder_factory->CreateStub();
+    auto recorder = recorder_factory->CreateStub();
 
-    EXPECT_TRUE(IsRecorderOfType<EmptyRecorder>(recorder_));
+    EXPECT_TRUE(IsRecorderOfType<EmptyRecorder>(recorder));
 }
 
 TEST(RecorderFactoryStubTest, CreateStubShallReturnEmptyRecorder)
@@ -53,9 +53,9 @@ TEST(RecorderFactoryStubTest, CreateStubShallReturnEmptyRecorder)
     RecordProperty("Description", "RecorderFactory shall create EmptyRecorder in case of using CreateStub.");
     RecordProperty("TestingTechnique", "Interface-based test");
 
-    auto recorder_ = RecorderFactory{}.CreateStub();
+    auto recorder = RecorderFactory{}.CreateStub();
 
-    EXPECT_TRUE(IsRecorderOfType<EmptyRecorder>(recorder_));
+    EXPECT_TRUE(IsRecorderOfType<EmptyRecorder>(recorder));
 }
 
 TEST(RecorderFactoryStubTest, CreateWithConsoleLoggingOnlyShallReturnPtr)
@@ -66,9 +66,9 @@ TEST(RecorderFactoryStubTest, CreateWithConsoleLoggingOnlyShallReturnPtr)
     RecordProperty("TestingTechnique", "Interface-based test");
 
     score::cpp::pmr::memory_resource* null_memory_resource = nullptr;
-    auto recorder_ = RecorderFactory{}.CreateWithConsoleLoggingOnly(null_memory_resource);
+    auto recorder = RecorderFactory{}.CreateWithConsoleLoggingOnly(null_memory_resource);
 
-    EXPECT_TRUE(IsRecorderOfType<TextRecorder>(recorder_));
+    EXPECT_TRUE(IsRecorderOfType<TextRecorder>(recorder));
 }
 
 TEST(RecorderFactoryStubTest, CreateFromConfigurationShallReturnPtr)
@@ -78,9 +78,9 @@ TEST(RecorderFactoryStubTest, CreateFromConfigurationShallReturnPtr)
     RecordProperty("TestingTechnique", "Interface-based test");
 
     score::cpp::pmr::memory_resource* null_memory_resource = nullptr;
-    auto recorder_ = RecorderFactory{}.CreateFromConfiguration(null_memory_resource);
+    auto recorder = RecorderFactory{}.CreateFromConfiguration(null_memory_resource);
 
-    EXPECT_TRUE(IsRecorderOfType<TextRecorder>(recorder_));
+    EXPECT_TRUE(IsRecorderOfType<TextRecorder>(recorder));
 }
 
 }  // namespace

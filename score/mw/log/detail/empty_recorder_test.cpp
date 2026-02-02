@@ -28,7 +28,7 @@ namespace
 class EmptyRecorderFixture : public ::testing::Test
 {
   public:
-    EmptyRecorder emptyRecorder;
+    EmptyRecorder empty_recorder;
 };
 
 TEST_F(EmptyRecorderFixture, StartRecord)
@@ -39,7 +39,7 @@ TEST_F(EmptyRecorderFixture, StartRecord)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.StartRecord("DFLT", LogLevel::kInfo);
+    empty_recorder.StartRecord("DFLT", LogLevel::kInfo);
 }
 
 TEST_F(EmptyRecorderFixture, StopRecord)
@@ -50,7 +50,7 @@ TEST_F(EmptyRecorderFixture, StopRecord)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.StopRecord(SlotHandle{});
+    empty_recorder.StopRecord(SlotHandle{});
 }
 
 TEST_F(EmptyRecorderFixture, LogBool)
@@ -61,7 +61,7 @@ TEST_F(EmptyRecorderFixture, LogBool)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, bool{});
+    empty_recorder.Log(SlotHandle{}, bool{});
 }
 
 TEST_F(EmptyRecorderFixture, LogUint8_t)
@@ -72,7 +72,7 @@ TEST_F(EmptyRecorderFixture, LogUint8_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::uint8_t{});
+    empty_recorder.Log(SlotHandle{}, std::uint8_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogInt8_t)
@@ -83,7 +83,7 @@ TEST_F(EmptyRecorderFixture, LogInt8_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::int8_t{});
+    empty_recorder.Log(SlotHandle{}, std::int8_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogUint16_t)
@@ -94,7 +94,7 @@ TEST_F(EmptyRecorderFixture, LogUint16_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::uint16_t{});
+    empty_recorder.Log(SlotHandle{}, std::uint16_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogInt16_t)
@@ -105,7 +105,7 @@ TEST_F(EmptyRecorderFixture, LogInt16_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::int16_t{});
+    empty_recorder.Log(SlotHandle{}, std::int16_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogUint32_t)
@@ -116,7 +116,7 @@ TEST_F(EmptyRecorderFixture, LogUint32_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::uint32_t{});
+    empty_recorder.Log(SlotHandle{}, std::uint32_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogInt32_t)
@@ -127,7 +127,7 @@ TEST_F(EmptyRecorderFixture, LogInt32_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::int32_t{});
+    empty_recorder.Log(SlotHandle{}, std::int32_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogUint64_t)
@@ -138,7 +138,7 @@ TEST_F(EmptyRecorderFixture, LogUint64_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::uint64_t{});
+    empty_recorder.Log(SlotHandle{}, std::uint64_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogInt64_t)
@@ -149,7 +149,7 @@ TEST_F(EmptyRecorderFixture, LogInt64_t)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::int64_t{});
+    empty_recorder.Log(SlotHandle{}, std::int64_t{});
 }
 
 TEST_F(EmptyRecorderFixture, LogFloat)
@@ -160,7 +160,7 @@ TEST_F(EmptyRecorderFixture, LogFloat)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, float{});
+    empty_recorder.Log(SlotHandle{}, float{});
 }
 
 TEST_F(EmptyRecorderFixture, LogDouble)
@@ -171,7 +171,7 @@ TEST_F(EmptyRecorderFixture, LogDouble)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, double{});
+    empty_recorder.Log(SlotHandle{}, double{});
 }
 
 TEST_F(EmptyRecorderFixture, LogStringView)
@@ -182,7 +182,7 @@ TEST_F(EmptyRecorderFixture, LogStringView)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, std::string_view{});
+    empty_recorder.Log(SlotHandle{}, std::string_view{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogHex8)
@@ -195,7 +195,7 @@ TEST_F(EmptyRecorderFixture, Log_LogHex8)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogHex8{});
+    empty_recorder.Log(SlotHandle{}, LogHex8{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogHex16)
@@ -208,7 +208,7 @@ TEST_F(EmptyRecorderFixture, Log_LogHex16)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogHex16{});
+    empty_recorder.Log(SlotHandle{}, LogHex16{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogHex32)
@@ -221,7 +221,7 @@ TEST_F(EmptyRecorderFixture, Log_LogHex32)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogHex32{});
+    empty_recorder.Log(SlotHandle{}, LogHex32{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogHex64)
@@ -234,7 +234,7 @@ TEST_F(EmptyRecorderFixture, Log_LogHex64)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogHex64{});
+    empty_recorder.Log(SlotHandle{}, LogHex64{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogBin8)
@@ -247,7 +247,7 @@ TEST_F(EmptyRecorderFixture, Log_LogBin8)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogBin8{});
+    empty_recorder.Log(SlotHandle{}, LogBin8{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogBin16)
@@ -260,7 +260,7 @@ TEST_F(EmptyRecorderFixture, Log_LogBin16)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogBin16{});
+    empty_recorder.Log(SlotHandle{}, LogBin16{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogBin32)
@@ -273,7 +273,7 @@ TEST_F(EmptyRecorderFixture, Log_LogBin32)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogBin32{});
+    empty_recorder.Log(SlotHandle{}, LogBin32{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogBin64)
@@ -286,7 +286,7 @@ TEST_F(EmptyRecorderFixture, Log_LogBin64)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogBin64{});
+    empty_recorder.Log(SlotHandle{}, LogBin64{});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogRawBuffer)
@@ -297,7 +297,7 @@ TEST_F(EmptyRecorderFixture, Log_LogRawBuffer)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogRawBuffer{nullptr, 0});
+    empty_recorder.Log(SlotHandle{}, LogRawBuffer{nullptr, 0});
 }
 
 TEST_F(EmptyRecorderFixture, Log_LogSlog2Message)
@@ -308,7 +308,7 @@ TEST_F(EmptyRecorderFixture, Log_LogSlog2Message)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    emptyRecorder.Log(SlotHandle{}, LogSlog2Message{11, "slog message"});
+    empty_recorder.Log(SlotHandle{}, LogSlog2Message{11, "slog message"});
 }
 
 TEST_F(EmptyRecorderFixture, IsLogEnabledShallReturnValue)
@@ -319,7 +319,7 @@ TEST_F(EmptyRecorderFixture, IsLogEnabledShallReturnValue)
     RecordProperty("TestingTechnique", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
-    EXPECT_FALSE(emptyRecorder.IsLogEnabled(LogLevel::kInfo, std::string_view{"DFLT"}));
+    EXPECT_FALSE(empty_recorder.IsLogEnabled(LogLevel::kInfo, std::string_view{"DFLT"}));
 }
 
 }  // namespace

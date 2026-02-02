@@ -39,7 +39,7 @@ class LogRecordCopyAndMoveOperatorsFixture : public ::testing::TestWithParam<std
     LogRecord GetSource() const noexcept
     {
         LogRecord src{GetParam()};
-        src.getLogEntry().payload.resize(GetParam() - GetSourceCapacity());
+        src.GetLogEntry().payload.resize(GetParam() - GetSourceCapacity());
         return src;
     }
 
@@ -58,7 +58,7 @@ TEST(LogRecord, LogRecordShallReturnExpectedLogEntry)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     LogRecord unit{kMaxPayloadSize};
-    EXPECT_EQ(unit.getLogEntry().payload.capacity(), kMaxPayloadSize);
+    EXPECT_EQ(unit.GetLogEntry().payload.capacity(), kMaxPayloadSize);
 }
 
 TEST(LogRecord, LogRecordShallReturnExpectedVerbosePayload)
@@ -70,7 +70,7 @@ TEST(LogRecord, LogRecordShallReturnExpectedVerbosePayload)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     LogRecord unit{kMaxPayloadSize};
-    EXPECT_EQ(unit.getVerbosePayload().RemainingCapacity(), kMaxPayloadSize);
+    EXPECT_EQ(unit.GetVerbosePayload().RemainingCapacity(), kMaxPayloadSize);
 }
 
 TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallCopyAssignAndUpdateReferenceCorrectly)
@@ -87,7 +87,7 @@ TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallCopyAssignAndUpdateRe
         const LogRecord src{GetSource()};
         unit = src;
     }
-    EXPECT_EQ(unit.getVerbosePayload().RemainingCapacity(), GetSourceCapacity());
+    EXPECT_EQ(unit.GetVerbosePayload().RemainingCapacity(), GetSourceCapacity());
 }
 
 TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallCopyConstructAndUpdateReferenceCorrectly)
@@ -104,7 +104,7 @@ TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallCopyConstructAndUpdat
         const LogRecord src{GetSource()};
         unit.emplace(src);
     }
-    EXPECT_EQ(unit->getVerbosePayload().RemainingCapacity(), GetSourceCapacity());
+    EXPECT_EQ(unit->GetVerbosePayload().RemainingCapacity(), GetSourceCapacity());
 }
 
 TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallMoveAssignAndUpdateReferenceCorrectly)
@@ -121,7 +121,7 @@ TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallMoveAssignAndUpdateRe
         LogRecord src{GetSource()};
         unit = std::move(src);
     }
-    EXPECT_EQ(unit.getVerbosePayload().RemainingCapacity(), GetSourceCapacity());
+    EXPECT_EQ(unit.GetVerbosePayload().RemainingCapacity(), GetSourceCapacity());
 }
 
 TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallMoveConstructAndUpdateReferenceCorrectly)
@@ -138,7 +138,7 @@ TEST_P(LogRecordCopyAndMoveOperatorsFixture, LogRecordShallMoveConstructAndUpdat
         LogRecord src{GetSource()};
         unit.emplace(std::move(src));
     }
-    EXPECT_EQ(unit->getVerbosePayload().RemainingCapacity(), GetSourceCapacity());
+    EXPECT_EQ(unit->GetVerbosePayload().RemainingCapacity(), GetSourceCapacity());
 }
 
 TEST(LogRecord, SelfAssignmentShallNotModifyState)
@@ -151,19 +151,19 @@ TEST(LogRecord, SelfAssignmentShallNotModifyState)
 
     // Arrange: Create a LogRecord object and set some initial state
     LogRecord unit{kMaxPayloadSize};
-    unit.getLogEntry().payload.resize(kMaxPayloadSize / 2);  // Set payload size
-    const std::size_t originalCapacity = unit.getLogEntry().payload.capacity();
-    const std::size_t originalSize = unit.getLogEntry().payload.size();
-    const std::size_t originalRemainingCapacity = unit.getVerbosePayload().RemainingCapacity();
+    unit.GetLogEntry().payload.resize(kMaxPayloadSize / 2);  // Set payload size
+    const std::size_t original_capacity = unit.GetLogEntry().payload.capacity();
+    const std::size_t original_size = unit.GetLogEntry().payload.size();
+    const std::size_t original_remaining_capacity = unit.GetVerbosePayload().RemainingCapacity();
 
     // Act: Perform self-assignment
     DISABLE_WARNING_SELF_ASSIGN_OVERLOADED
     unit = unit;
 
     // Assert: Verify the state remains unchanged
-    EXPECT_EQ(unit.getLogEntry().payload.capacity(), originalCapacity);
-    EXPECT_EQ(unit.getLogEntry().payload.size(), originalSize);
-    EXPECT_EQ(unit.getVerbosePayload().RemainingCapacity(), originalRemainingCapacity);
+    EXPECT_EQ(unit.GetLogEntry().payload.capacity(), original_capacity);
+    EXPECT_EQ(unit.GetLogEntry().payload.size(), original_size);
+    EXPECT_EQ(unit.GetVerbosePayload().RemainingCapacity(), original_remaining_capacity);
 }
 
 INSTANTIATE_TEST_SUITE_P(LogRecordMoveAndCopyTests,

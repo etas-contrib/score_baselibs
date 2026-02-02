@@ -25,8 +25,8 @@ namespace detail
 
 enum class AddArgumentResult : bool
 {
-    NotAdded = false,
-    Added = true,
+    kNotAdded = false,
+    kAdded = true,
 };
 
 }  // namespace detail

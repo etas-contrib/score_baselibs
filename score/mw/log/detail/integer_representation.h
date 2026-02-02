@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#ifndef SCORE_MW_LOG_DETAIL_NUMBER_FORMAT_H
-#define SCORE_MW_LOG_DETAIL_NUMBER_FORMAT_H
+#ifndef SCORE_MW_LOG_DETAIL_INTEGER_REPRESENTATION_H
+#define SCORE_MW_LOG_DETAIL_INTEGER_REPRESENTATION_H
 
 #include <cstdint>
 
@@ -39,4 +39,4 @@ enum class IntegerRepresentation : std::uint8_t
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_DETAIL_INTEGER_REPRESENTATION_H

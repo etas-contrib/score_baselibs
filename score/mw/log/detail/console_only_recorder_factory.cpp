@@ -62,8 +62,8 @@ std::unique_ptr<Recorder> RecorderFactory::CreateWithConsoleLoggingOnly(
         memory_resource = score::cpp::pmr::get_default_resource();
     }
     auto backend = CreateConsoleLoggingBackend(config, memory_resource);
-    constexpr bool check_log_level_for_console = false;
-    return std::make_unique<TextRecorder>(config, std::move(backend), check_log_level_for_console);
+    constexpr bool kCheckLogLevelForConsole = false;
+    return std::make_unique<TextRecorder>(config, std::move(backend), kCheckLogLevelForConsole);
 }
 
 std::unique_ptr<score::mw::log::IRecorderFactory> CreateRecorderFactory() noexcept

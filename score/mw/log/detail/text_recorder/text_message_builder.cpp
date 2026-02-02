@@ -85,7 +85,7 @@ void TextMessageBuilder::SetNextMessage(LogRecord& log_record) noexcept
 {
     log_record_ = log_record;
 
-    const auto& log_entry = log_record_.value().get().getLogEntry();
+    const auto& log_entry = log_record_.value().get().GetLogEntry();
     detail::TextFormat::PutFormattedTime(header_payload_);
     detail::TextFormat::Log(header_payload_, TimeStamp());
     detail::TextFormat::Log(header_payload_, std::string_view{"000"});
@@ -108,7 +108,7 @@ score::cpp::optional<score::cpp::span<const std::uint8_t>> TextMessageBuilder::G
 
     score::cpp::optional<score::cpp::span<const std::uint8_t>> return_result = {};
 
-    detail::VerbosePayload& verbose_payload = log_record_.value().get().getVerbosePayload();
+    detail::VerbosePayload& verbose_payload = log_record_.value().get().GetVerbosePayload();
     switch (parsing_phase_)  // LCOV_EXCL_BR_LINE: exclude the "default" branch.
     {
         case ParsingPhase::kHeader:
@@ -118,7 +118,7 @@ score::cpp::optional<score::cpp::span<const std::uint8_t>> TextMessageBuilder::G
         case ParsingPhase::kPayload:
             parsing_phase_ = ParsingPhase::kReinitialize;
             detail::TextFormat::TerminateLog(verbose_payload);
-            return_result = log_record_.value().get().getVerbosePayload().GetSpan();
+            return_result = log_record_.value().get().GetVerbosePayload().GetSpan();
             break;
         case ParsingPhase::kReinitialize:
             parsing_phase_ = ParsingPhase::kHeader;

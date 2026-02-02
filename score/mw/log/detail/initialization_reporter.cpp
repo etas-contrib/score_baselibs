@@ -67,7 +67,7 @@ void ReportInitializationError(const score::result::Error& error,
         std::ignore = error_stream.write(app_id.value().data(), static_cast<std::streamsize>(app_id.value().size()));
     }
 
-    if (context_info.size() > 0UL)
+    if (!context_info.empty())
     {
         error_stream << " with context information: ";
         std::ignore = error_stream.write(context_info.data(), static_cast<std::streamsize>(context_info.size()));

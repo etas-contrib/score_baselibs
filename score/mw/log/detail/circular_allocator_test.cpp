@@ -124,11 +124,11 @@ TEST_F(CircularAllocatorFixture, WritingFromMultipleThreadsIsSafe)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given a Ring-Buffer
-    constexpr size_t number_of_slots = 10U;
-    CircularAllocator<std::int32_t> unit{number_of_slots};
+    constexpr size_t kNumberOfSlots = 10U;
+    CircularAllocator<std::int32_t> unit{kNumberOfSlots};
 
     // When writing into it from multiple threads
-    std::array<std::thread, number_of_slots - 1> threads{};
+    std::array<std::thread, kNumberOfSlots - 1> threads{};
     for (std::uint8_t counter{}; counter < threads.size(); counter++)
     {
         threads.at(counter) = std::thread([&unit, counter, this]() noexcept {
@@ -156,8 +156,8 @@ TEST_F(CircularAllocatorFixture, WritingFromMultipleThreadsIsSafeWithInsufficien
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given a Ring-Buffer
-    constexpr std::size_t number_of_slots{100};
-    CircularAllocator<std::int32_t> unit{number_of_slots};
+    constexpr std::size_t kNumberOfSlots{100};
+    CircularAllocator<std::int32_t> unit{kNumberOfSlots};
 
     // When trying to write into it from multiple threads such that the number of slots is insufficient.
     std::array<std::thread, 10> threads{};
@@ -183,8 +183,8 @@ TEST_F(CircularAllocatorFixture, WritingFromMultipleThreadsIsSafeWithInsufficien
 
     // And the number of reserved slots shall be equal to the capacity.
     const std::size_t number_of_reserved_slots =
-        std::accumulate(number_of_reserved_slots_per_thread.begin(), number_of_reserved_slots_per_thread.end(), 0u);
-    EXPECT_EQ(number_of_reserved_slots, number_of_slots);
+        std::accumulate(number_of_reserved_slots_per_thread.begin(), number_of_reserved_slots_per_thread.end(), 0U);
+    EXPECT_EQ(number_of_reserved_slots, kNumberOfSlots);
 }
 
 TEST_F(CircularAllocatorFixture, TryAcquireWhenAllSlotsAcquired)

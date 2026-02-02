@@ -39,4 +39,4 @@ void ReportInitializationError(const score::result::Error& error,
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_DETAIL_INITIALIZATION_REPORTER_H

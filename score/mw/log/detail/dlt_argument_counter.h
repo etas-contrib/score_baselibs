@@ -31,10 +31,10 @@ namespace detail
 class DltArgumentCounter
 {
   public:
-    using add_argument_callback = score::cpp::callback<AddArgumentResult(void), 64UL>;
+    using AddArgumentCallback = score::cpp::callback<AddArgumentResult(void), 64UL>;
 
     explicit DltArgumentCounter(std::uint8_t&) noexcept;
-    AddArgumentResult TryAddArgument(add_argument_callback) noexcept;
+    AddArgumentResult TryAddArgument(AddArgumentCallback) noexcept;
 
   private:
     std::uint8_t& counter_;
@@ -45,4 +45,4 @@ class DltArgumentCounter
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_DETAIL_DLT_ARGUMENT_COUNTER_H

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-#ifndef SCORE_MW_LOG_DETAIL_RECORD_H
-#define SCORE_MW_LOG_DETAIL_RECORD_H
+#ifndef SCORE_MW_LOG_DETAIL_LOG_RECORD_H
+#define SCORE_MW_LOG_DETAIL_LOG_RECORD_H
 
 #include "score/mw/log/detail/log_entry.h"
 #include "score/mw/log/detail/verbose_payload.h"
@@ -31,10 +31,10 @@ class LogRecord
   public:
     explicit LogRecord(const std::size_t max_payload_size_bytes = 255U) noexcept;
 
-    LogEntry& getLogEntry() noexcept;
-    const LogEntry& getLogEntry() const noexcept;
-    detail::VerbosePayload& getVerbosePayload() noexcept;
-    const detail::VerbosePayload& getVerbosePayload() const noexcept;
+    LogEntry& GetLogEntry() noexcept;
+    const LogEntry& GetLogEntry() const noexcept;
+    detail::VerbosePayload& GetVerbosePayload() noexcept;
+    const detail::VerbosePayload& GetVerbosePayload() const noexcept;
 
     /// Rule of five: Need manual constructors and assignment operator to update the internal reference correctly.
     ~LogRecord() noexcept = default;
@@ -44,10 +44,10 @@ class LogRecord
     LogRecord& operator=(LogRecord&&) noexcept;
 
   private:
-    LogEntry logEntry_;
+    LogEntry log_entry_;
 
     // Caution: contains a reference to logEntry_ internals.
-    detail::VerbosePayload verbosePayload_;
+    detail::VerbosePayload verbose_payload_;
 };
 
 }  // namespace detail
@@ -55,4 +55,4 @@ class LogRecord
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_DETAIL_LOG_RECORD_H

@@ -30,12 +30,12 @@ namespace
 class VerbosePayloadFixture : public ::testing::Test
 {
   public:
-    VerbosePayload constructUnitWithSize(const std::size_t size)
+    VerbosePayload ConstructUnitWithSize(const std::size_t size)
     {
-        return VerbosePayload{size, buffer_};
+        return VerbosePayload{size, buffer};
     }
 
-    ByteVector buffer_{};
+    ByteVector buffer{};
 };
 
 using VerbosePayloadFixtureDeathTest = VerbosePayloadFixture;
@@ -49,19 +49,19 @@ TEST_F(VerbosePayloadFixture, SinglePutStoresMemoryCorrect)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an empty verbose payload with enough space
-    VerbosePayload unit = constructUnitWithSize(10);
+    VerbosePayload unit = ConstructUnitWithSize(10);
 
     // When adding some data into that buffer
-    constexpr auto some_text = "Hello";
-    unit.Put(some_text, 6);
+    constexpr auto kSomeText = "Hello";
+    unit.Put(kSomeText, 6);
 
     // Then the data is stored in the right order
-    ASSERT_EQ(buffer_.at(0), 'H');
-    ASSERT_EQ(buffer_.at(1), 'e');
-    ASSERT_EQ(buffer_.at(2), 'l');
-    ASSERT_EQ(buffer_.at(3), 'l');
-    ASSERT_EQ(buffer_.at(4), 'o');
-    ASSERT_EQ(buffer_.at(5), '\0');
+    ASSERT_EQ(buffer.at(0), 'H');
+    ASSERT_EQ(buffer.at(1), 'e');
+    ASSERT_EQ(buffer.at(2), 'l');
+    ASSERT_EQ(buffer.at(3), 'l');
+    ASSERT_EQ(buffer.at(4), 'o');
+    ASSERT_EQ(buffer.at(5), '\0');
 }
 
 TEST_F(VerbosePayloadFixture, MultiplePutStoresMemoryCorrectly)
@@ -74,22 +74,22 @@ TEST_F(VerbosePayloadFixture, MultiplePutStoresMemoryCorrectly)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an already filled buffer with enough space
-    VerbosePayload unit = constructUnitWithSize(20);
+    VerbosePayload unit = ConstructUnitWithSize(20);
     unit.Put("Hello", 6);
 
     // When adding some more data into that buffer
-    constexpr auto some_text = "Next";
-    unit.Put(some_text, 5);
+    constexpr auto kSomeText = "Next";
+    unit.Put(kSomeText, 5);
 
     // Then the previous data is not corrupted and the new one is appended
     // Please be advised that on purpose we want raw memory handling, meaning
     // the duplicated null-termination is correct.
-    ASSERT_EQ(buffer_.at(5), '\0');
-    ASSERT_EQ(buffer_.at(6), 'N');
-    ASSERT_EQ(buffer_.at(7), 'e');
-    ASSERT_EQ(buffer_.at(8), 'x');
-    ASSERT_EQ(buffer_.at(9), 't');
-    ASSERT_EQ(buffer_.at(10), '\0');
+    ASSERT_EQ(buffer.at(5), '\0');
+    ASSERT_EQ(buffer.at(6), 'N');
+    ASSERT_EQ(buffer.at(7), 'e');
+    ASSERT_EQ(buffer.at(8), 'x');
+    ASSERT_EQ(buffer.at(9), 't');
+    ASSERT_EQ(buffer.at(10), '\0');
 }
 
 TEST_F(VerbosePayloadFixture, PutZeroSize)
@@ -101,10 +101,10 @@ TEST_F(VerbosePayloadFixture, PutZeroSize)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an already filled buffer with enough space
-    VerbosePayload unit = constructUnitWithSize(20);
+    VerbosePayload unit = ConstructUnitWithSize(20);
     unit.Put("Hello", 0);
 
-    ASSERT_EQ(buffer_.size(), 0);
+    ASSERT_EQ(buffer.size(), 0);
 }
 
 TEST_F(VerbosePayloadFixture, PutStopsAtMaximumSize)
@@ -117,17 +117,17 @@ TEST_F(VerbosePayloadFixture, PutStopsAtMaximumSize)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an empty verbose payload with to few space
-    VerbosePayload unit = constructUnitWithSize(3);
+    VerbosePayload unit = ConstructUnitWithSize(3);
 
     // When adding some data into that buffer
-    constexpr auto some_text = "Hello";
-    unit.Put(some_text, 6);
+    constexpr auto kSomeText = "Hello";
+    unit.Put(kSomeText, 6);
 
     // Then the data is stored in the right order, with maximum size of the buffer
-    ASSERT_EQ(buffer_.at(0), 'H');
-    ASSERT_EQ(buffer_.at(1), 'e');
-    ASSERT_EQ(buffer_.at(2), 'l');
-    ASSERT_EQ(buffer_.size(), 3);
+    ASSERT_EQ(buffer.at(0), 'H');
+    ASSERT_EQ(buffer.at(1), 'e');
+    ASSERT_EQ(buffer.at(2), 'l');
+    ASSERT_EQ(buffer.size(), 3);
 }
 
 TEST_F(VerbosePayloadFixtureDeathTest, AssertForInvalidPointerKicksIn)
@@ -139,7 +139,7 @@ TEST_F(VerbosePayloadFixtureDeathTest, AssertForInvalidPointerKicksIn)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an empty buffer
-    VerbosePayload unit = constructUnitWithSize(0);
+    VerbosePayload unit = ConstructUnitWithSize(0);
 
     // When trying to write data from a nullptr
     // Then an assertion protects from wrong behavior
@@ -156,14 +156,14 @@ TEST_F(VerbosePayloadFixture, EmptyBufferHasNoWrongBehavior)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an empty verbose payload with no space
-    VerbosePayload unit = constructUnitWithSize(0);
+    VerbosePayload unit = ConstructUnitWithSize(0);
 
     // When adding some data into that buffer
-    constexpr auto some_text = "Hello";
-    unit.Put(some_text, 6);
+    constexpr auto kSomeText = "Hello";
+    unit.Put(kSomeText, 6);
 
     // Then no data is stored
-    ASSERT_EQ(buffer_.size(), 0);
+    ASSERT_EQ(buffer.size(), 0);
 }
 
 TEST_F(VerbosePayloadFixture, SizeFitsInPayload)
@@ -175,7 +175,7 @@ TEST_F(VerbosePayloadFixture, SizeFitsInPayload)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an empty verbose payload with enough space
-    VerbosePayload unit = constructUnitWithSize(5);
+    VerbosePayload unit = ConstructUnitWithSize(5);
 
     // When checking if a fitting capacity is requested
     // Then WillOverflow returns false
@@ -191,7 +191,7 @@ TEST_F(VerbosePayloadFixture, SizeFitsNotInPayload)
     RecordProperty("DerivationTechnique", "Analysis of requirements");
 
     // Given an empty verbose payload with enough space
-    VerbosePayload unit = constructUnitWithSize(5);
+    VerbosePayload unit = ConstructUnitWithSize(5);
 
     // When checking if a fitting capacity is requested
     // Then WillOverflow returns false
@@ -211,7 +211,7 @@ TEST_F(VerbosePayloadFixture, SetBufferShallRebindReference)
 
     // Given VerbosePayload is constructed with a different buffer.
     constexpr std::size_t kOldBufferSize = 5U;
-    VerbosePayload unit = constructUnitWithSize(kOldBufferSize);
+    VerbosePayload unit = ConstructUnitWithSize(kOldBufferSize);
 
     // When assigning another buffer...
     constexpr std::size_t kNewBufferSize = 7U;
@@ -223,7 +223,7 @@ TEST_F(VerbosePayloadFixture, SetBufferShallRebindReference)
     ASSERT_EQ(unit.RemainingCapacity(), kNewBufferSize);
 
     // ...and that the old buffer is unchanged:
-    ASSERT_EQ(buffer_.capacity(), kOldBufferSize);
+    ASSERT_EQ(buffer.capacity(), kOldBufferSize);
 }
 
 }  // namespace

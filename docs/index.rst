@@ -32,5 +32,33 @@ Summary
 
 **Type:** C++ Base Libraries
 
+Module Documents
+################
 
+.. toctree::
+   :maxdepth: 1
+   :glob:
+
+.. mod:: baselibs_cpp
+   :id: mod__baselibs_cpp
+   :includes: comp__log_cpp
+   :status: valid
+   :safety: ASIL_B
+   :security: YES
+
+   .. needarch::
+      :scale: 50
+      :align: center
+
+      {{ draw_module(need(), needs) }}
+
+Components
+==========
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 2
+   :glob:
+
+   ./log_cpp/docs/index
 

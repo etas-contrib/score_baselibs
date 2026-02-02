@@ -52,7 +52,10 @@ cc_library(
     srcs = ["interprocess_notification.cpp"],
     hdrs = ["interprocess_notification.h"],
     features = COMPILER_WARNING_FEATURES,
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//platform/aas/mw/com/test:__subpackages__",
+        "@score_baselibs//score/analysis/tracing/test:__subpackages__",
+    ],
     deps = [
         ":interprocess_conditional_variable",
         ":interprocess_mutex",

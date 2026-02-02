@@ -16,10 +16,8 @@
 
 using ::testing::_;
 using ::testing::AtMost;
-using ::testing::DoAll;
 using ::testing::InSequence;
 using ::testing::Return;
-using ::testing::SetArgPointee;
 using ::testing::StrEq;
 
 using Mman = ::score::os::Mman;
@@ -74,8 +72,6 @@ constexpr const char* const TestValues::sharedMemorySegmentLockPath;
 constexpr const char* const TestValues::secondSharedMemorySegmentLockPath;
 constexpr std::size_t TestValues::some_share_memory_size;
 constexpr uid_t TestValues::our_uid;
-constexpr auto kTypedmemdProcessName = "typed_memory_daemon";
-constexpr std::uint32_t kMaxBufferSize = 16384U;
 
 bool is_aligned(const volatile void* const p, const std::size_t n) noexcept
 {
@@ -230,7 +226,6 @@ score::cpp::expected<std::shared_ptr<SharedMemoryResource>, score::os::Error> Sh
 SharedMemoryResourceTest::SharedMemoryResourceTest()
     : memory_resource_registry_attorney_{MemoryResourceRegistry::getInstance()}
 {
-    pwd_.pw_uid = TestValues::typedmemd_uid;
 }
 
 void SharedMemoryResourceTest::SetUp()
@@ -240,8 +235,6 @@ void SharedMemoryResourceTest::SetUp()
     SharedMemoryFactory::SetTypedMemoryProvider(typedmemory_mock_);
     EXPECT_CALL(*mman_mock_, shm_unlink(::testing::_)).Times(0);
     EXPECT_CALL(*unistd_mock_, getuid).Times(::testing::AnyNumber()).WillRepeatedly(Return(TestValues::our_uid));
-    EXPECT_CALL(*unistd_mock_, getpwnam_r(StrEq(kTypedmemdProcessName), _, _, kMaxBufferSize, _))
-        .WillRepeatedly(DoAll(SetArgPointee<1>(pwd_), SetArgPointee<4>(&pwd_), Return(score::cpp::blank{})));
 }
 
 void SharedMemoryResourceTest::TearDown()

@@ -19,7 +19,6 @@ on:
       - main
   merge_group:
     types: [checks_requested]
-  workflow_call:
 jobs:
   coverage-report:
     runs-on: ubuntu-22.04
@@ -36,9 +35,9 @@ jobs:
         uses: bazel-contrib/setup-bazel@0.18.0
         with:
           bazelisk-cache: true
-          disk-cache: ${{ github.job }}
+          disk-cache: ${{ github.workflow }}
           repository-cache: true
-          cache-save: ${{ github.event_name == 'push' }}
+          cache-save: ${{ github.event_name != 'pull_request' }}
       - name: Run Bazel Coverage
         run: |
           bazel coverage --config=bl-x86_64-linux -- //score/... \
@@ -55,6 +54,6 @@ jobs:
       - name: Upload Coverage Artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ github.event.repository.name }}_cpp_coverage_report
+          name: ${{ github.event.repository.name }}_coverage_report
           path: cpp_coverage/
-          retention-days: 10
+          retention-days: 30

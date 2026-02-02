@@ -12,14 +12,13 @@
 # *******************************************************************************
 name: Bazel Build (QNX)
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize]
   push:
     branches:
       - main
   merge_group:
     types: [checks_requested]
-  workflow_call:
 jobs:
   qnx-build:
     strategy:
@@ -34,7 +33,6 @@ jobs:
       bazel-target: "//score/..."
       bazel-config: ${{ matrix.bazel-config }}
       credential-helper: ".github/tools/qnx_credential_helper.py"
-      bazel-disk-cache: ${{ matrix.bazel-config }}
     secrets:
       score-qnx-license: ${{ secrets.SCORE_QNX_LICENSE }}
       score-qnx-user: ${{ secrets.SCORE_QNX_USER }}

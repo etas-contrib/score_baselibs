@@ -10,32 +10,21 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-#include "score/analysis/tracing/common/flexible_circular_allocator/error_code.h"
-// SCORE_CCM_NO_LINT No harm from  using switch_case
+
+#include "score/analysis/tracing/common/flexible_circular_allocator/error_codes/flexible_circular_allocator/error_code.h"
+
 std::string_view score::analysis::tracing::FlexibleAllocatorErrorDomain::MessageFor(
     const score::result::ErrorCode& code) const noexcept
 {
-    std::string_view error_message;  // Variable to hold the error message
-    // No harm from going outside the range as that will jump to the default state in switch_case(a7_2_1),No harm to
-    // define the switch in that format (m6_4_3)
-    //  coverity[autosar_cpp14_a7_2_1_violation]
-    //  coverity[autosar_cpp14_m6_4_3_violation]
-    switch (static_cast<score::analysis::tracing::FlexibleAllocatorErrorCode>(code))
+    std::string_view error_message;
+
+    switch (code)
     {
-        case FlexibleAllocatorErrorCode::kNoError:
-            error_message = "No error";
+        case static_cast<score::result::ErrorCode>(FlexibleAllocatorErrorCode::kNotEnoughMemory):
+            error_message = "Not enough memory available for allocation request";
             break;
-        case FlexibleAllocatorErrorCode::kBaseAddressVoid:
-            error_message = "Base address is nullptr";
-            break;
-        case FlexibleAllocatorErrorCode::kCorruptedBufferBlock:
-            error_message = "Corrupted buffer block detected, integrity check failed";
-            break;
-        case FlexibleAllocatorErrorCode::kInvalidListEntryOffset:
-            error_message = "Invalid list entry offset, out of bounds access prevented";
-            break;
-        case FlexibleAllocatorErrorCode::kSizeIsZero:
-            error_message = "Size is zero";
+        case static_cast<score::result::ErrorCode>(FlexibleAllocatorErrorCode::kInvalidDeallocationAddress):
+            error_message = "Invalid deallocation address provided";
             break;
         default:
             error_message = "Unknown error";

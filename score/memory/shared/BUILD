@@ -122,7 +122,7 @@ cc_library(
     hdrs = ["shared_memory_resource.h"],
     features = COMPILER_WARNING_FEATURES,
     implementation_deps = [
-        "@score_baselibs//score/language/safecpp/string_view:null_termination_check",
+        "@score_baselibs//score/language/safecpp/string_view:zstring_view",
     ],
     tags = ["FFI"],
     visibility = [
@@ -428,6 +428,7 @@ cc_library(
     ],
     deps = [
         ":polymorphic_offset_ptr_allocator",
+        "@score_baselibs//score/language/safecpp/string_view:char_traits_wrapper",
     ],
 )
 

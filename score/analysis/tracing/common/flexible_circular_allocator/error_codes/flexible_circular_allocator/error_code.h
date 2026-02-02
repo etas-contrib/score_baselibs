@@ -10,11 +10,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
+
 #ifndef SCORE_ANALYSIS_TRACING_COMMON_FLEXIBLE_CIRCULAR_ALLOCATOR_ERROR_CODE_H
 #define SCORE_ANALYSIS_TRACING_COMMON_FLEXIBLE_CIRCULAR_ALLOCATOR_ERROR_CODE_H
 
 #include "score/result/error.h"
-#include <score/string_view.hpp>
+#include <string_view>
 
 namespace score
 {
@@ -26,11 +27,8 @@ namespace tracing
 /// @brief Error code that method can return
 enum class FlexibleAllocatorErrorCode : score::result::ErrorCode
 {
-    kNoError = 0,
-    kBaseAddressVoid,
-    kCorruptedBufferBlock,
-    kInvalidListEntryOffset,
-    kSizeIsZero,
+    kNotEnoughMemory,
+    kInvalidDeallocationAddress,
 };
 
 class FlexibleAllocatorErrorDomain final : public score::result::ErrorDomain

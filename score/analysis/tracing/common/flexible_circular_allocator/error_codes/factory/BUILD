@@ -10,14 +10,23 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
-package(default_visibility = ["//visibility:public"])
 
-alias(
-    name = "qnx7",
-    actual = "@score_bazel_platforms//:qnx7_1",
-)
+load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
-alias(
-    name = "qnx8",
-    actual = "@score_bazel_platforms//:qnx8_0",
+cc_library(
+    name = "error_code",
+    srcs = [
+        "error_code.cpp",
+    ],
+    hdrs = [
+        "error_code.h",
+    ],
+    features = COMPILER_WARNING_FEATURES,
+    tags = ["FUSA"],
+    visibility = [
+        "@score_baselibs//score/analysis/tracing/common/flexible_circular_allocator:__subpackages__",
+    ],
+    deps = [
+        "@score_baselibs//score/result",
+    ],
 )

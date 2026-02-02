@@ -12,6 +12,7 @@
  ********************************************************************************/
 #include "score/memory/shared/shared_memory_resource.h"
 #include "score/language/safecpp/safe_math/details/addition_subtraction/addition_subtraction.h"
+#include "score/language/safecpp/string_view/zstring_view.h"
 #include "score/memory/shared/memory_resource_proxy.h"
 #include "score/memory/shared/memory_resource_registry.h"
 #include "score/memory/shared/pointer_arithmetic_util.h"
@@ -19,7 +20,6 @@
 #include "score/memory/shared/typedshm/typedshm_wrapper/typed_memory.h"
 
 #include "score/language/safecpp/safe_math/safe_math.h"
-#include "score/language/safecpp/string_view/null_termination_check.h"
 
 #include "score/bitmanipulation/bitmask_operators.h"
 #include "score/os/errno.h"
@@ -93,13 +93,6 @@ constexpr auto readWriteAccessForEveryBody =
 // coverity[autosar_cpp14_a0_1_1_violation] false-positive: used in waitForOtherProcessAndOpen
 constexpr auto read_only = ::score::os::Stat::Mode::kReadUser;
 
-// Suppress "AUTOSAR C++14 A2-10-4" rule finding: The identifier name of a non-member object with static storage
-// duration or static function shall not be reused within a namespace.
-// Rationale: This identifier is in an anonymous namespace which ensures that it is not reused between translation
-// units. Within this translation unit it is only defined once.
-// coverity[autosar_cpp14_a2_10_4_violation]
-constexpr score::os::IAccessControlList::UserIdentifier kTypedmemdUid = 3020;
-
 /// \brief Class aggregating info about shm-object read out via stat/fstat from the shm-object file
 struct ShmObjectStatInfo
 {
@@ -139,15 +132,10 @@ static std::shared_ptr<SharedMemoryResource> CreateInstance(Args&&... args)
     return std::make_shared<MakeSharedEnabler>(std::forward<Args>(args)...);
 }
 
-bool doesFileExist(const score::cpp::string_view filePath)
+bool doesFileExist(const safecpp::zstring_view filePath)
 {
     ::score::os::StatBuffer buffer{};
-    // NOTE: Below uses of `safecpp::GetPtrToNullTerminatedUnderlyingBufferOf()` will emit a deprecation warning here
-    //       since it is used in conjunction with `std::string_view`. Thus, it must get fixed appropriately instead!
-    //       For examples about how to achieve that, see
-    //       broken_link_g/swh/safe-posix-platform/blob/master/score/language/safecpp/string_view/README.md
-    const auto result =
-        ::score::os::Stat::instance().stat(safecpp::GetPtrToNullTerminatedUnderlyingBufferOf(filePath), buffer);
+    const auto result = ::score::os::Stat::instance().stat(filePath.c_str(), buffer);
     if (!result.has_value())
     {
         if (result.error() != Error::Code::kNoSuchFileOrDirectory)
@@ -175,14 +163,14 @@ bool waitForFreeLockFile(const std::string& lock_file_path)
     static_assert(maxRetryCount <= std::numeric_limits<decltype(retryCount)>::max(),
                   "Counter `retryCount` cannot hold maxRetryCount.");
 
-    bool lockFileExists = doesFileExist(lock_file_path.c_str());
+    bool lockFileExists = doesFileExist(lock_file_path);
     // LCOV_EXCL_BR_START (Tool false positive: We check check all decisions i.e. that lock file does not exist, lock
     // file exists and retry count is less than max retry count and lock file exists and retry count is equal to max
     // retry count. It's impossible that the retry count check will fail when entering the loop which may be what the
     // tool wants us to check.)
     while (lockFileExists && (retryCount < maxRetryCount))
     {
-        lockFileExists = doesFileExist(lock_file_path.c_str());
+        lockFileExists = doesFileExist(lock_file_path);
         retryCount++;
         std::this_thread::sleep_for(retryAfter);
     }
@@ -208,7 +196,8 @@ score::os::IAccessControlList::UserIdentifier GetCreatorUidFromTypedmemd(
 ShmObjectStatInfo GetShmObjectStatInfo(const ISharedMemoryResource::FileDescriptor fd,
                                        bool is_named_shm,
                                        const std::string* const path,
-                                       const score::memory::shared::TypedMemory* typed_memory_ptr)
+                                       const score::memory::shared::TypedMemory* typed_memory_ptr,
+                                       const std::optional<uid_t> typedmemd_uid)
 {
     score::os::StatBuffer stat_buffer{};
 
@@ -220,7 +209,7 @@ ShmObjectStatInfo GetShmObjectStatInfo(const ISharedMemoryResource::FileDescript
     }
     const auto owner_uid = stat_buffer.st_uid;
     bool is_shm_in_typed_memory = false;
-    if (is_named_shm && (kTypedmemdUid == owner_uid))
+    if (is_named_shm && (typedmemd_uid.has_value() && (typedmemd_uid.value() == owner_uid)))
     {
         // Suppress "AUTOSAR C++14 A0-1-1", The rule states: "A project shall not contain instances of non-volatile
         // variables being given values that are not subsequently used"
@@ -479,6 +468,7 @@ SharedMemoryResource::SharedMemoryResource(std::variant<std::string, std::uint64
       control_block_{nullptr},
       acl_factory_{std::move(acl_factory)},
       is_shm_in_typed_memory_{false},
+      typedmemd_uid_{AcquireTypedMemoryDemonUid()},
       log_identification_{std::holds_alternative<std::string>(identifier)
                               ? "file: " + std::get<std::string>(identifier)
                               : "id: " + std::to_string(std::get<std::uint64_t>(identifier))},
@@ -536,7 +526,8 @@ score::cpp::expected_blank<Error> SharedMemoryResource::CreateImpl(const std::si
 
     SCORE_LANGUAGE_FUTURECPP_ASSERT_PRD_MESSAGE(file_descriptor_ >= 0, "No valid file descriptor");
 
-    const auto stat_values = GetShmObjectStatInfo(file_descriptor_, (path != nullptr), path, typed_memory_ptr_.get());
+    const auto stat_values =
+        GetShmObjectStatInfo(file_descriptor_, (path != nullptr), path, typed_memory_ptr_.get(), typedmemd_uid_);
     file_owner_uid_ = stat_values.owner_uid;
 
     if (!is_shm_in_typed_memory_)
@@ -629,7 +620,8 @@ auto SharedMemoryResource::waitForOtherProcessAndOpen() noexcept -> score::cpp::
         return score::cpp::make_unexpected(result.error());
     }
     file_descriptor_ = result.value();
-    const auto stat_values = GetShmObjectStatInfo(file_descriptor_, is_named_shm, path, typed_memory_ptr_.get());
+    const auto stat_values =
+        GetShmObjectStatInfo(file_descriptor_, is_named_shm, path, typed_memory_ptr_.get(), typedmemd_uid_);
     is_shm_in_typed_memory_ = stat_values.is_shm_in_typed_memory;
     file_owner_uid_ = stat_values.owner_uid;
     virtual_address_space_to_reserve_ = stat_values.size;
@@ -680,6 +672,31 @@ auto SharedMemoryResource::getOwnerUid() const noexcept -> uid_t
 auto SharedMemoryResource::GetLockFilePath(const std::string& input_path) noexcept -> std::string
 {
     return std::string{kTmpPathPrefix} + input_path + "_lock";
+}
+
+auto SharedMemoryResource::AcquireTypedMemoryDemonUid() noexcept -> std::optional<uid_t>
+{
+    constexpr auto kTypedMemoryDaemonProcessName = "typed_memory_daemon";
+    constexpr std::uint32_t kMaxBufferSize = 16384U;
+    passwd pwd{};
+    passwd* result = nullptr;
+    std::vector<char> buffer(kMaxBufferSize);
+
+    const auto pw = ::score::os::Unistd::instance().getpwnam_r(
+        kTypedMemoryDaemonProcessName, &pwd, buffer.data(), buffer.size(), &result);
+    if (pw.has_value())
+    {
+        if (result == nullptr)
+        {
+            score::mw::log::LogError("shm")
+                << "AcquireTypedMemoryDaemonUid: user " << std::string{kTypedMemoryDaemonProcessName} << " not found";
+            return std::nullopt;
+        }
+        score::mw::log::LogInfo("shm") << "AcquireTypedMemoryDaemonUid: typed_memory_daemon uid: " << pwd.pw_uid;
+        return static_cast<uid_t>(pwd.pw_uid);
+    }
+    score::mw::log::LogError("shm") << "AcquireTypedMemoryDaemonUid failed: " << pw.error();
+    return std::nullopt;
 }
 
 // coverity[autosar_cpp14_m7_3_1_violation] false-positive: class method (Ticket-234468)

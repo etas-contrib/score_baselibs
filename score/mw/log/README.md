@@ -174,7 +174,7 @@ Note: This target bundles all supported logging backends, introducing additional
 
 ```bazel
 deps = [
-    "@score_logging//score/mw/log:frontend",
+    "@score_baselibs//score/mw/log:frontend",
 ],
 ```
 
@@ -184,7 +184,7 @@ Note: Test binaries that depend on frontend only library targets require an expl
 
 ```bazel
 deps = [
-    "@score_logging//score/mw/log:backend_stub_testutil",
+    "@score_baselibs//score/mw/log:backend_stub_testutil",
 ],
 ```
 
@@ -362,7 +362,7 @@ The key sections of this implementation are going to be described in this docume
 The primary assumption is to **have separate library** for each custom user type.
 Thus the first step is to create separate directory. For the purpose of presenting
 an example there was a directory created inside `mw/log` test directory, e.g.:
-`aas/mw/log/test/my_custom_lib` and create `BUILD` file there, e.g.:
+`mw/log/test/my_custom_lib` and create `BUILD` file there, e.g.:
 
 ```bazel
 cc_library(
@@ -388,7 +388,7 @@ cc_library(
 cc_test(
     ...
     deps = [
-        "@score_logging//score/mw/log",
+        "@score_logging//score/mw/log:log",
     ],
 )
 ```
@@ -421,8 +421,8 @@ The content of C++ files are declaration and definition of `operator<<` needed
 for logging, e.g. header `my_custom_type_mw_log.h`:
 
 ```c++
-#include "score/mw/log/log_stream.h"
-#include "score/mw/log/test/my_custom_lib/my_custom_type.h"
+#include "mw/log/log_stream.h"
+#include "mw/log/test/my_custom_lib/my_custom_type.h"
 
 namespace my
 {
@@ -480,7 +480,7 @@ cc_library(
     ...
     visibility = [
         ...
-        "//score/mw/log/my_custom_lib:__pkg__",
+        "//mw/log/my_custom_lib:__pkg__",
     ],
 ```
 
@@ -511,8 +511,8 @@ cc_library(
 **2.** Add the overload in header file:
 
 ```c++
-#include "platform/aas/ara/log/inc/ara/log/logstream.h"
-#include "score/mw/log/test/my_custom_lib/my_custom_type.h"
+#include "mw/log/logstream.h"
+#include "mw/log/test/my_custom_lib/my_custom_type.h"
 
 namespace my
 {
@@ -697,7 +697,7 @@ Note, however, that other limitation like total bandwidth of network or processi
 Dropped log messages can be monitored and reported by the DLT-Daemon backend.
 
 ### DLT-Daemon backend (Datarouter) security policy (secpol) configuration
-For the [message exchange between Logging Clients and the Datarouter](broken_link_g/swh/ddad_platform/tree/master/aas/mw/log/design/datarouter_backend#message-exchange-between-logging-clients-and-datarouter), it is crucial that the secpol for the Datarouter (datarouter.secpol) contains the secpol type of the client process in its channel connect configuration. Otherwise, the Datarouter will be unable to establish a connection with the client, and consequently, it cannot forward the logs to remote.
+For the [message exchange between Logging Clients and the Datarouter](broken_link_g/swh/safe-posix-platform/tree/master/score/mw/log/design/datarouter_backend#message-exchange-between-logging-clients-and-datarouter), it is crucial that the secpol for the Datarouter (datarouter.secpol) contains the secpol type of the client process in its channel connect configuration. Otherwise, the Datarouter will be unable to establish a connection with the client, and consequently, it cannot forward the logs to remote.
 
 ```
 allow datarouter_t {

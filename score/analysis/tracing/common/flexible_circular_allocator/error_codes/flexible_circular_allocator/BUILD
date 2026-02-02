@@ -11,14 +11,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-# Some targets might expect that a toolchain (or platform)
-# comes with specific libraries. If such a library would not
-# be available, the target could not build
-constraint_setting(name = "libraries")
+load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
-# dev-package of https://github.com/systemd/systemd
-constraint_value(
-    name = "systemd",
-    constraint_setting = ":libraries",
-    visibility = ["//visibility:public"],
+cc_library(
+    name = "error_code",
+    srcs = [
+        "error_code.cpp",
+    ],
+    hdrs = [
+        "error_code.h",
+    ],
+    features = COMPILER_WARNING_FEATURES,
+    tags = ["FUSA"],
+    visibility = [
+        "@score_baselibs//score/analysis/tracing/common/flexible_circular_allocator:__subpackages__",
+    ],
+    deps = [
+        "@score_baselibs//score/result",
+    ],
 )

@@ -11,27 +11,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
-package(default_visibility = ["//visibility:public"])
+load("@score_baselibs//score/language/safecpp:toolchain_features.bzl", "COMPILER_WARNING_FEATURES")
 
-constraint_setting(name = "environment")
-
-constraint_value(
-    name = "hardware",
-    constraint_setting = ":environment",
-)
-
-alias(
-    name = "virtual",
-    actual = ":qqvp",
-    deprecation = "Use more specific constraint value",
-)
-
-constraint_value(
-    name = "qqvp",
-    constraint_setting = ":environment",
-)
-
-constraint_value(
-    name = "qemu",
-    constraint_setting = ":environment",
+cc_library(
+    name = "error_code",
+    srcs = [
+        "error_code.cpp",
+    ],
+    hdrs = [
+        "error_code.h",
+    ],
+    features = COMPILER_WARNING_FEATURES,
+    tags = ["FUSA"],
+    visibility = [
+        "@score_baselibs//score/analysis/tracing/common/flexible_circular_allocator:__subpackages__",
+    ],
+    deps = [
+        "@score_baselibs//score/result",
+    ],
 )

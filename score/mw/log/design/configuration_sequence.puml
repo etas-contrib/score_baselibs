@@ -14,6 +14,10 @@ participant "OS" as OS
 activate App
 
 App -> LOG **: CreateLogger(...)
+note right of LOG
+The initialization of the runtime is triggered by the first log call.
+endnote
+
 activate LOG
 
 App -> LOG: LogError()
@@ -79,35 +83,26 @@ end note
 
 TCR -> RF: Return Configuration instance
 
-group Possibilities
-
-note right of RF
-  For exmple, kRemote and kConsole
-  requested in configuration.
-end note
-
-Create "DatarouterRecorder" as DR
-
-RF -> DR: Create instance with configuration
+alt "Console only recorder (compile option)"
 
 Create "TextRecorder" as TR
-
 RF -> TR: Create instance with configuration
+
+RF -> ER: if logmode other than KConsole is provided.
+
+else "Datarouter (compile option)"
 
 Create "CompositeRecorder" as CR
 
-RF -> CR: Create with Datarouter and StandardOut recorders
-note right of CR
-  Composite Recorder will
-  forward the logs to DatarouterRecorder
-  and TextRecorder
-end note
-
+RF -> CR
+note left of CR
+  Recorder setup depends on the datarouter configuration.
+endnote
 end
 
 RF -> RT: Store returned instance
 
-RT -> LSF
-LSF -> LOG: Return Recorder instance
+RT -> LSF: Return Recorder reference
+LSF -> LOG: LogStream with Recorder
 
 @enduml

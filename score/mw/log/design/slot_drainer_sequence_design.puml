@@ -37,6 +37,7 @@ SlotDrainer -> MessageBuilder : SetNextMessage(log_record)
 
 SlotDrainer -> NonBlockingWriter : FlushIntoFile()
 NonBlockingWriter -> SlotDrainer: kDone
+SlotDrainer -> SlotAllocator: ReleaseSlot(slot) 
 
 
 SlotDrainer -> MessageBuilder : GetNextSpan()

@@ -12,10 +12,11 @@ else (No)
     else (No)
     :Push element to stack;
     :Memory Fence (Release);
-    :Return element value;
+    :Mark element as writen;
+    :Return Reference to element value;
     stop
     endif
 endif
-    :Return null value;
+    :Return nullopt;
 stop
 @enduml

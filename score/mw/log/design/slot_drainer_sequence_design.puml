@@ -56,7 +56,15 @@ SlotDrainer -> CircularBuffer : empty()
 CircularBuffer -> SlotDrainer: true
 
 Backend <-- SlotDrainer
+end
 
+group "Error Case"
+
+Backend -> SlotDrainer : Flush()
+SlotDrainer -> NonBlockingWriter : FlushIntoFile()
+NonBlockingWriter -> SlotDrainer: kWouldBlock
+note left of SlotDrainer : SlotDrainer ignores errors
+Backend <--- SlotDrainer
 
 end
 

@@ -15,7 +15,7 @@
 #include "score/analysis/tracing/common/flexible_circular_allocator/error_codes/lockless_flexible_circular_allocator/error_code.h"
 #include "score/analysis/tracing/common/flexible_circular_allocator/flexible_circular_allocator_interface.h"
 #include "score/analysis/tracing/common/flexible_circular_allocator/lockless_flexible_circular_allocator_types.h"
-#include "score/analysis/tracing/common/utilities/increment_with_saturation.hpp"
+#include "score/analysis/tracing/common/utilities/saturating_integral.hpp"
 #include "score/memory/shared/atomic_indirector.h"
 #include "score/memory/shared/managed_memory_resource.h"
 #include <array>
@@ -97,8 +97,8 @@ class LocklessFlexibleCircularAllocator : public IFlexibleCircularAllocator
     std::atomic<std::uint32_t> lowest_size_{0};
     std::atomic<std::uint32_t> alloc_cntr_{0};
     std::atomic<std::uint32_t> dealloc_cntr_{0};
-    SaturatingIntegral<std::uint32_t> allocate_retry_cntr_;
-    SaturatingIntegral<std::uint32_t> allocate_call_cntr_;
+    SaturatingIntegral<32> allocate_retry_cntr_;
+    SaturatingIntegral<32> allocate_call_cntr_;
     std::atomic<bool> tmd_stats_enabled_{false};
 };
 

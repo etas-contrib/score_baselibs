@@ -1,7 +1,7 @@
 cc_library(
     name = "tracing_utils",
     hdrs = [
-        "increment_with_saturation.hpp",
+        "saturating_integral.hpp",
     ],
     tags = ["FUSA"],
     visibility = [

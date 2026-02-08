@@ -31,6 +31,7 @@ enum class LocklessFlexibleAllocatorErrorCode : score::result::ErrorCode
     kInvalidListEntryOffset,
     kOverFlowOccurred,
     kNotEnoughMemory,
+    kListQueueFull,
     kViolatedMaximumRetries,
     kInvalidDeallocationAddress,
     kInvalidOffsetValue,

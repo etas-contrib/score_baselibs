@@ -53,6 +53,9 @@ std::array<std::atomic<ListEntry>, kArraySize> list_array_{};
 - A `list_queue_head_` is an atomic uint32 to keep track of the last allocated List Entry in `list_array_` and is updated with each allocation.
 - A `list_queue_tail_` is an atomic uint32 to keep track of the last deallocated List Entry in `list_array_` and is updated with each deallocation.
 
+To prevent overwriting still-live list entries, the allocator treats the list queue as full when advancing the head
+would make it equal to the tail. In that case, `Allocate()` fails with `kListQueueFull` and no metadata is overwritten.
+
 ```c
 std::atomic<uint32_t> list_queue_head_;
 std::atomic<uint32_t> list_queue_tail_;

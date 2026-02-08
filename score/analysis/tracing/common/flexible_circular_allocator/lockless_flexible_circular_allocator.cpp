@@ -99,7 +99,8 @@ std::size_t LocklessFlexibleCircularAllocator<AtomicIndirectorType>::GetAvailabl
 }
 
 template <template <class> class AtomicIndirectorType>
-std::uint32_t LocklessFlexibleCircularAllocator<AtomicIndirectorType>::GetListQueueNextHead()
+std::uint32_t LocklessFlexibleCircularAllocator<AtomicIndirectorType>::GetListQueueNextHead(
+    const std::uint32_t current_head) const
 {
     // Suppress "AUTOSAR C++14 A4-7-1" rule finding. This rule states: "An integer expression shall
     // not lead to data loss.".
@@ -107,7 +108,7 @@ std::uint32_t LocklessFlexibleCircularAllocator<AtomicIndirectorType>::GetListQu
     // the values and the resulting expression are within the range of a 32-bit unsigned integer,
     // no data loss can occur.
     // coverity[autosar_cpp14_a4_7_1_violation]
-    std::uint32_t head = (list_queue_head_.load() + 1U) % (kListEntryArraySize - 1U);
+    std::uint32_t head = (current_head + 1U) % (kListEntryArraySize - 1U);
     return head;
 }
 
@@ -190,7 +191,14 @@ score::Result<std::uint32_t> LocklessFlexibleCircularAllocator<AtomicIndirectorT
     for (uint8_t retries = 0U; retries < kMaxRetries; retries++)
     {
         auto old_list_queue_head = list_queue_head_.load();
-        auto new_list_queue_head = GetListQueueNextHead();
+        auto new_list_queue_head = GetListQueueNextHead(old_list_queue_head);
+
+        // Check if the queue is full (head would catch up to tail)
+        if (new_list_queue_head == list_queue_tail_.load(std::memory_order_seq_cst))
+        {
+            return MakeUnexpected(LocklessFlexibleAllocatorErrorCode::kListQueueFull);
+        }
+
         if (AtomicIndirectorType<decltype(list_queue_head_.load())>::compare_exchange_strong(
                 list_queue_head_, old_list_queue_head, new_list_queue_head, std::memory_order_seq_cst) == true)
         {

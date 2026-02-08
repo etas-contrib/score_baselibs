@@ -56,8 +56,8 @@ class LocklessFlexibleCircularAllocator : public IFlexibleCircularAllocator
 #endif
     std::uint32_t BufferQueueSize();
     ResultBlank FreeBlock(BufferBlock& current_block);
-    std::uint32_t GetListQueueNextHead();
     score::Result<std::uint32_t> AcquireListQueueEntry() noexcept;
+    std::uint32_t GetListQueueNextHead(std::uint32_t current_head) const;
     score::Result<uint8_t*> AllocateWithWrapAround(std::uint32_t aligned_size, std::uint32_t list_entry_element_index);
     score::Result<uint8_t*> AllocateWithNoWrapAround(std::uint32_t aligned_size, std::uint32_t list_entry_element_index);
     bool ValidateListEntryIndex(const std::uint32_t& index) const;

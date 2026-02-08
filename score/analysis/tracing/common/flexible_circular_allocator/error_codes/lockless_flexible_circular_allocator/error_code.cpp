@@ -31,6 +31,9 @@ std::string_view score::analysis::tracing::LocklessFlexibleAllocatorErrorDomain:
         case static_cast<score::result::ErrorCode>(LocklessFlexibleAllocatorErrorCode::kNotEnoughMemory):
             error_message = "Not enough memory available for allocation request";
             break;
+        case static_cast<score::result::ErrorCode>(LocklessFlexibleAllocatorErrorCode::kListQueueFull):
+            error_message = "List queue is full, allocation metadata exhausted";
+            break;
         case static_cast<score::result::ErrorCode>(LocklessFlexibleAllocatorErrorCode::kViolatedMaximumRetries):
             error_message = "Violated maximum retries";
             break;

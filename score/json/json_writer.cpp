@@ -230,10 +230,13 @@ score::Result<std::string> ToBufferInternal(const T& json_data)
 
     score::json::JsonSerialize serializer{string_stream};
     auto result = serializer << json_data;
+    // LCOV_EXCL_BR_START Error path currently not reachable
     if (!result.has_value())
+    // LCOV_EXCL_BR_STOP
     {
         return score::Unexpected{result.error()};
     }
+
     return string_stream.str();
 }
 

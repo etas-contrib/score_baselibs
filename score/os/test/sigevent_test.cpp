@@ -204,11 +204,11 @@ TEST_F(SigEventTest, Reset)
     EXPECT_EQ(signal_event_->GetSigevent().sigev_notify, SIGEV_THREAD);
 
     auto callback = [](sigval) {};
-    signal_event_->SetThreadCallback(callback);
+    result = signal_event_->SetThreadCallback(callback);
     EXPECT_TRUE(result.has_value());
     EXPECT_EQ(signal_event_->GetSigevent().sigev_notify_function, callback);
 
-    signal_event_->SetSignalNumber(SIGUSR1);
+    result = signal_event_->SetSignalNumber(SIGUSR1);
     EXPECT_TRUE(result.has_value());
     EXPECT_EQ(signal_event_->GetSigevent().sigev_signo, SIGUSR1);
 

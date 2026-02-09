@@ -143,7 +143,7 @@ TEST_F(AttributeGettersTest, GetFloatingPointUsingResult)
 
     // Floating-point numbers are always stored as double. Having input as a float
     // and trying to get it as a double throws assertion since this should be unreachable case.
-    ASSERT_DEATH(GetAttribute<double>(test_data_result_, "float"), "");
+    ASSERT_DEATH(std::ignore = GetAttribute<double>(test_data_result_, "float"), "");
 }
 
 TEST_F(AttributeGettersTest, GetFloatingPointDirectValue)
@@ -161,7 +161,7 @@ TEST_F(AttributeGettersTest, GetFloatingPointDirectValue)
 
     // Floating-point numbers are always stored as double. Having input as a float
     // and trying to get it as a double throws assertion since this should be unreachable case.
-    ASSERT_DEATH(GetAttribute<double>(test_data_value_, "float"), "");
+    ASSERT_DEATH(std::ignore = GetAttribute<double>(test_data_value_, "float"), "");
 }
 
 TEST_F(AttributeGettersTest, GetStringUsingResult)

@@ -29,7 +29,8 @@ void TestInput(const std::string& input, const T& json)
 {
     std::ostringstream stream{};
     JsonSerialize serializer{stream};
-    serializer << json;
+    auto result = serializer << json;
+    EXPECT_TRUE(result.has_value());
     EXPECT_EQ(stream.str(), input);
 }
 

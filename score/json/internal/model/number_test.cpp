@@ -328,7 +328,7 @@ void TestValueToAnyOtherType(Input input,
     // and trying to get it as a double throws assertion since this should be unreachable case.
     if (std::is_same<Input, float>::value == true)
     {
-        EXPECT_DEATH(Number{input}.As<double>(), "");
+        EXPECT_DEATH(std::ignore = Number{input}.As<double>(), "");
     }
     else
     {

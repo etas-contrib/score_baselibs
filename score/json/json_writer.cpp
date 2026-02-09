@@ -229,7 +229,11 @@ score::Result<std::string> ToBufferInternal(const T& json_data)
     score::cpp::ignore = string_stream.imbue(loc);
 
     score::json::JsonSerialize serializer{string_stream};
-    serializer << json_data;
+    auto result = serializer << json_data;
+    if (!result.has_value())
+    {
+        return score::Unexpected{result.error()};
+    }
     return string_stream.str();
 }
 

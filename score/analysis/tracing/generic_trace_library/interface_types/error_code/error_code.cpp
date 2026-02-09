@@ -170,18 +170,6 @@ std::string_view score::analysis::tracing::GenericTraceAPIErrorDomain::MessageFo
         case ErrorCode::kBadFileDescriptorFatal:
             error_message = "Bad file descriptor";
             break;
-        case ErrorCode::kChannelCreationFailedFatal:
-            error_message = "Channel creation failed";
-            break;
-        case ErrorCode::kNameAttachFailedFatal:
-            error_message = "Name attach failed";
-            break;
-        case ErrorCode::kNameDetachFailedFatal:
-            error_message = "Name detach failed";
-            break;
-        case ErrorCode::kDispatchDestroyFailedRecoverable:
-            error_message = "Dispatch destroy failed";
-            break;
         case ErrorCode::kWrongHandleRecoverable:
             error_message = "Wrong memory handle of local trace job";
             break;
@@ -279,7 +267,6 @@ bool score::analysis::tracing::IsErrorRecoverable(const score::analysis::tracing
         case ErrorCode::kWrongMessageIdRecoverable:
         case ErrorCode::kWrongClientIdRecoverable:
         case ErrorCode::kClientNameAlreadyUsedRecoverable:
-        case ErrorCode::kDispatchDestroyFailedRecoverable:
         case ErrorCode::kWrongHandleRecoverable:
         case ErrorCode::kLastRecoverable:
         case ErrorCode::kGenericErrorRecoverable:
@@ -305,9 +292,6 @@ bool score::analysis::tracing::IsErrorRecoverable(const score::analysis::tracing
         case ErrorCode::kSharedMemoryObjectFlagsRetrievalFailedFatal:
         case ErrorCode::kSharedMemoryObjectHandleDeletionFailedFatal:
         case ErrorCode::kBadFileDescriptorFatal:
-        case ErrorCode::kChannelCreationFailedFatal:
-        case ErrorCode::kNameAttachFailedFatal:
-        case ErrorCode::kNameDetachFailedFatal:
         case ErrorCode::kTerminalFatal:
         case ErrorCode::kInvalidAppInstanceIdFatal:
         case ErrorCode::kInvalidBindingTypeFatal:

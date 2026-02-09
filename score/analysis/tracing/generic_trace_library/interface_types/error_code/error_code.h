@@ -86,10 +86,6 @@ enum class ErrorCode : score::result::ErrorCode
     kClientNameAlreadyUsedRecoverable,  // Client name is already used by different process
 
     kBadFileDescriptorFatal,
-    kChannelCreationFailedFatal,        ///< QNX channel creation failed (Fatal)
-    kNameAttachFailedFatal,             ///< QNX name_attach failed (Fatal)
-    kNameDetachFailedFatal,             ///< QNX name_detach failed (Fatal)
-    kDispatchDestroyFailedRecoverable,  ///< QNX dispatch_destroy failed (Recoverable)
 
     kWrongHandleRecoverable,  ///< Wrong handle of local trace job (Recoverable)
 

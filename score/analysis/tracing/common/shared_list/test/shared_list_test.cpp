@@ -151,7 +151,7 @@ TEST_F(SharedListFixture, EmplaceBack)
 
     shared::List<std::pair<std::uint32_t, std::uint32_t>> list(flexible_allocator_mock_);
 
-    list.emplace_back(1U, 2U);
+    ASSERT_TRUE(list.emplace_back(1U, 2U));
 
     EXPECT_EQ(list.size(), 1);
     auto result = list.at(0);
@@ -176,8 +176,8 @@ TEST_F(SharedListFixture, AtIndex)
 
     shared::List<std::uint8_t> list(flexible_allocator_mock_);
 
-    list.push_back(5);
-    list.push_back(10);
+    ASSERT_TRUE(list.push_back(5));
+    ASSERT_TRUE(list.push_back(10));
 
     auto result1 = list.at(0);
     EXPECT_TRUE(result1.has_value());
@@ -208,9 +208,9 @@ TEST_F(SharedListFixture, Iterators)
 
     shared::List<std::uint8_t> list(flexible_allocator_mock_);
 
-    list.push_back(1);
-    list.push_back(2);
-    list.push_back(3);
+    ASSERT_TRUE(list.push_back(1));
+    ASSERT_TRUE(list.push_back(2));
+    ASSERT_TRUE(list.push_back(3));
 
     std::uint8_t expected[] = {1, 2, 3};
     size_t index = 0;
@@ -243,9 +243,9 @@ TEST_F(SharedListFixture, ArrowOperatorAccessesMember)
     };
     shared::List<TestData> list(flexible_allocator_mock_);
 
-    list.push_back({1, "one"});
-    list.push_back({2, "two"});
-    list.push_back({3, "three"});
+    ASSERT_TRUE(list.push_back({1, "one"}));
+    ASSERT_TRUE(list.push_back({2, "two"}));
+    ASSERT_TRUE(list.push_back({3, "three"}));
 
     std::uint8_t expected_ids[] = {1, 2, 3};
     std::string expected_name[] = {"one", "two", "three"};
@@ -375,7 +375,7 @@ TEST_F(SharedListFixture, SharedMemoryChunk)
             }
         }
         list.clear();
-        flexible_allocator->Deallocate(vector, sizeof(vector));
+        EXPECT_TRUE(flexible_allocator->Deallocate(vector, sizeof(vector)));
     }};
 
     allocator_thread.join();
@@ -453,7 +453,7 @@ TEST_F(SharedListFixture, SharedMemoryChunkCanaryDetection)
     EXPECT_FALSE(corrupted_chunk.GetData().has_value());
 
     list.clear();
-    flexible_allocator->Deallocate(vector_shm_raw_pointer, sizeof(ShmChunkVector));
+    EXPECT_TRUE(flexible_allocator->Deallocate(vector_shm_raw_pointer, sizeof(ShmChunkVector)));
 }
 
 TEST_F(SharedListFixture, SharedMemoryChunkCorruptionInList)
@@ -522,7 +522,7 @@ TEST_F(SharedListFixture, SharedMemoryChunkCorruptionInList)
     }
 
     list.clear();
-    flexible_allocator->Deallocate(vector_shm_raw_pointer, sizeof(ShmChunkVector));
+    EXPECT_TRUE(flexible_allocator->Deallocate(vector_shm_raw_pointer, sizeof(ShmChunkVector)));
 }
 TEST_F(SharedListFixture, ClearWithValidListConditionFalse)
 {
@@ -681,7 +681,7 @@ TEST_F(SharedListFixture, AtMethodCurrentNullptrConditionTrue)
 
     // Clean up
     list.~List();
-    flexible_allocator->Deallocate(vector_shm_raw_pointer, sizeof(ShmChunkVector));
+    EXPECT_TRUE(flexible_allocator->Deallocate(vector_shm_raw_pointer, sizeof(ShmChunkVector)));
     flexible_allocator.reset();
     memory_pointer_.reset();
 }

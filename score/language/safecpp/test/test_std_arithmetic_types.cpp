@@ -46,18 +46,18 @@ TEST(StdFloatTypes, IECConformance)
 
 TEST(StdIntegralTypes, signess_and_bytes_number)
 {
-// Test identifies implementation defined behavior.
-// As the standard does not specify if plain char is signed or unsigned.
-// char on QNX is considered as unsigned char and on GCC and Clang is considered as signed.
-#if defined(__QNX__)
-    // As the signess of char depends on using qemu or the real hardware, this line got commented until we decide
-    // How to move forward in this ticket Ticket-141110
-    // static_assert(std::numeric_limits<char>::is_signed == false,
-    //               "it is expected a 'char' to be unsigned in a QNX environment");
+    // This test identifies implementation-defined behavior.
+    // As the standard does not specify whether plain char is signed or unsigned,
+    // a char on AArch64 is expected to be unsigned whereas a char on x86_64 is expected to be signed.
+#if defined(__aarch64__)
+    static_assert(std::numeric_limits<char>::is_signed == false,
+                  "plain 'char' type is expected to be unsigned on AArch64");
+#elif defined(__x86_64__)
+    static_assert(std::numeric_limits<char>::is_signed == true, "plain 'char' type is expected to be signed on x86_64");
 #else
-    static_assert(std::numeric_limits<char>::is_signed == true,
-                  "it is expected a 'char' to be signed in a linux environment");
+#error "Unsupported platform: neither aarch64 nor x86_64"
 #endif
+
     // Test identifies number of bytes
     static_assert(sizeof(char) == 1, "it is expected a char bytes' number to be 1");
 

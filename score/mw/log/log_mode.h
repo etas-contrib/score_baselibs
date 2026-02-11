@@ -40,4 +40,4 @@ enum class LogMode : uint8_t
 }  // namespace mw
 }  // namespace score
 
-#endif  // SCORE_MW_LOG_LOG_LEVEL_H
+#endif  // SCORE_MW_LOG_LOG_MODE_H

@@ -28,12 +28,11 @@ namespace log
 namespace
 {
 
-using ::testing::_;
 using ::testing::Return;
 
-const SlotHandle HANDLE{42};
-const auto CONTEXT = std::string_view{"MYCT"};
-const auto CONTEXT_DESCRIPTION = std::string_view{"Test context description"};
+const SlotHandle kHandle{42};
+const auto kContext = std::string_view{"MYCT"};
+const auto kContextDescription = std::string_view{"Test context description"};
 const auto kDefaultContext = std::string_view{"DFLT"};
 
 class BasicLoggerFixture : public ::testing::Test
@@ -41,11 +40,11 @@ class BasicLoggerFixture : public ::testing::Test
   public:
     BasicLoggerFixture()
     {
-        score::mw::log::SetLogRecorder(&recorder_mock_);
+        score::mw::log::SetLogRecorder(&recorder_mock);
     }
 
-    Logger unit_{CONTEXT};
-    RecorderMock recorder_mock_{};
+    Logger unit{kContext};
+    RecorderMock recorder_mock{};
 };
 
 class LoggerFixture : public BasicLoggerFixture
@@ -53,7 +52,7 @@ class LoggerFixture : public BasicLoggerFixture
   public:
     LoggerFixture()
     {
-        EXPECT_CALL(recorder_mock_, StopRecord(HANDLE)).Times(1);
+        EXPECT_CALL(recorder_mock, StopRecord(kHandle)).Times(1);
     }
 };
 
@@ -67,10 +66,10 @@ TEST_F(LoggerFixture, CanLogVerboseWithContext)
 
     // Given nothing
     // Expecting a log record of level verbose
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kVerbose)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kVerbose)).WillOnce(Return(kHandle));
 
     // When logging at level verbose
-    unit_.LogVerbose() << 42;
+    unit.LogVerbose() << 42;
 }
 
 TEST_F(LoggerFixture, CanLogDebugWithContext)
@@ -83,10 +82,10 @@ TEST_F(LoggerFixture, CanLogDebugWithContext)
 
     // Given nothing
     // Expecting a log record of level debug
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kDebug)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kDebug)).WillOnce(Return(kHandle));
 
     // When logging at level debug
-    unit_.LogDebug() << 42;
+    unit.LogDebug() << 42;
 }
 
 TEST_F(LoggerFixture, CanLogInfoWithContext)
@@ -99,10 +98,10 @@ TEST_F(LoggerFixture, CanLogInfoWithContext)
 
     // Given nothing
     // Expecting a log record of level info
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kInfo)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kInfo)).WillOnce(Return(kHandle));
 
     // When logging at level info
-    unit_.LogInfo() << 42;
+    unit.LogInfo() << 42;
 }
 
 TEST_F(LoggerFixture, CanLogWarnWithContext)
@@ -115,10 +114,10 @@ TEST_F(LoggerFixture, CanLogWarnWithContext)
 
     // Given nothing
     // Expecting a log record of level warn
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kWarn)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kWarn)).WillOnce(Return(kHandle));
 
     // When logging at level warn
-    unit_.LogWarn() << 42;
+    unit.LogWarn() << 42;
 }
 
 TEST_F(LoggerFixture, CanLogErrorWithContext)
@@ -131,10 +130,10 @@ TEST_F(LoggerFixture, CanLogErrorWithContext)
 
     // Given nothing
     // Expecting a log record of level error
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kError)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kError)).WillOnce(Return(kHandle));
 
     // When logging at level error
-    unit_.LogError() << 42;
+    unit.LogError() << 42;
 }
 
 TEST_F(LoggerFixture, CanLogFatalWithContext)
@@ -147,10 +146,10 @@ TEST_F(LoggerFixture, CanLogFatalWithContext)
 
     // Given nothing
     // Expecting a log record of level fatal
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kFatal)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kFatal)).WillOnce(Return(kHandle));
 
     // When logging at level fatal
-    unit_.LogFatal() << 42;
+    unit.LogFatal() << 42;
 }
 
 TEST_F(LoggerFixture, CheckThatWithLevelSetsCorrectLogLevel)
@@ -163,10 +162,10 @@ TEST_F(LoggerFixture, CheckThatWithLevelSetsCorrectLogLevel)
 
     // Given nothing
     // Expecting a log record of level warn
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kWarn)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kWarn)).WillOnce(Return(kHandle));
 
     // When logging at level warn
-    unit_.WithLevel(score::mw::log::LogLevel::kWarn) << 42;
+    unit.WithLevel(score::mw::log::LogLevel::kWarn) << 42;
 }
 
 TEST_F(BasicLoggerFixture, CheckThatIsLogEnabledReturnsCorrectValue)
@@ -178,10 +177,10 @@ TEST_F(BasicLoggerFixture, CheckThatIsLogEnabledReturnsCorrectValue)
     RecordProperty("DerivationTechnique", "Generation and analysis of equivalence classes");
 
     // Given IsLogEnabled is called with the expected context
-    EXPECT_CALL(recorder_mock_, IsLogEnabled(LogLevel::kWarn, CONTEXT)).WillOnce(Return(true));
+    EXPECT_CALL(recorder_mock, IsLogEnabled(LogLevel::kWarn, kContext)).WillOnce(Return(true));
 
     // Expect that the correct value is returned.
-    EXPECT_TRUE(unit_.IsLogEnabled(LogLevel::kWarn));
+    EXPECT_TRUE(unit.IsLogEnabled(LogLevel::kWarn));
 }
 
 TEST(CreateLoggerGetContext, CreateLoggerWithNeededContext)
@@ -191,8 +190,8 @@ TEST(CreateLoggerGetContext, CreateLoggerWithNeededContext)
     RecordProperty("Description", "Verifies that GetContext shall return the right context.");
     RecordProperty("TestType", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
-    Logger unit = CreateLogger(CONTEXT);
-    EXPECT_EQ(unit.GetContext(), CONTEXT);
+    Logger unit = CreateLogger(kContext);
+    EXPECT_EQ(unit.GetContext(), kContext);
 }
 
 TEST(CreateLoggerGetContext, WhenCreateLoggerWIthEmptyContextShallReturnDefaultLogger)
@@ -216,8 +215,8 @@ TEST(CreateLoggerGetContext, CreateLoggerPassingTwoArgs)
                    "two arguments.");
     RecordProperty("TestType", "Requirements-based test");
     RecordProperty("DerivationTechnique", "Analysis of requirements");
-    Logger unit = CreateLogger(CONTEXT, CONTEXT_DESCRIPTION);
-    EXPECT_EQ(unit.GetContext(), CONTEXT);
+    Logger unit = CreateLogger(kContext, kContextDescription);
+    EXPECT_EQ(unit.GetContext(), kContext);
 }
 
 }  // namespace

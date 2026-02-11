@@ -27,25 +27,25 @@ namespace detail
 // 2. Defining it as a local variable does not resolve the Coverity warning.
 // 3. Converting to `if-else` statements would introduce complexity and trigger complexity warnings.
 // coverity[autosar_cpp14_a3_3_2_violation]
-const PeriodSuffixMap PeriodToSuffix = {{typeid(std::atto::type), "as"},
-                                        {typeid(std::femto::type), "fs"},
-                                        {typeid(std::pico::type), "ps"},
-                                        {typeid(std::nano::type), "ns"},
-                                        {typeid(std::micro::type), "μs"},
-                                        {typeid(std::milli::type), "ms"},
-                                        {typeid(std::centi::type), "cs"},
-                                        {typeid(std::deci::type), "ds"},
-                                        {typeid(std::ratio<1>::type), "s"},
-                                        {typeid(std::deca::type), "das"},
-                                        {typeid(std::hecto::type), "hs"},
-                                        {typeid(std::kilo::type), "ks"},
-                                        {typeid(std::mega::type), "Ms"},
-                                        {typeid(std::giga::type), "Gs"},
-                                        {typeid(std::tera::type), "Ts"},
-                                        {typeid(std::peta::type), "Ps"},
-                                        {typeid(std::exa::type), "Es"},
-                                        {typeid(std::ratio<60>::type), "min"},
-                                        {typeid(std::ratio<3600>::type), "h"}};
+const PeriodSuffixMap kPeriodToSuffix = {{typeid(std::atto::type), "as"},
+                                         {typeid(std::femto::type), "fs"},
+                                         {typeid(std::pico::type), "ps"},
+                                         {typeid(std::nano::type), "ns"},
+                                         {typeid(std::micro::type), "μs"},
+                                         {typeid(std::milli::type), "ms"},
+                                         {typeid(std::centi::type), "cs"},
+                                         {typeid(std::deci::type), "ds"},
+                                         {typeid(std::ratio<1>::type), "s"},
+                                         {typeid(std::deca::type), "das"},
+                                         {typeid(std::hecto::type), "hs"},
+                                         {typeid(std::kilo::type), "ks"},
+                                         {typeid(std::mega::type), "Ms"},
+                                         {typeid(std::giga::type), "Gs"},
+                                         {typeid(std::tera::type), "Ts"},
+                                         {typeid(std::peta::type), "Ps"},
+                                         {typeid(std::exa::type), "Es"},
+                                         {typeid(std::ratio<60>::type), "min"},
+                                         {typeid(std::ratio<3600>::type), "h"}};
 }  // namespace detail
 
 }  // namespace log

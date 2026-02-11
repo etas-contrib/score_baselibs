@@ -108,6 +108,9 @@ TEST(LogStringTest, CanImplicitlyConvertFromStringLikeTypes)
 
     struct MyStringView
     {
+        // LogString constructor uses std::data() which internally calls this data() method via ADL,
+        // requiring lowercase naming convention per C++17 standard
+        // NOLINTNEXTLINE(readability-identifier-naming): Justification above
         constexpr const char* data() const noexcept
         {
             return kExpected;
@@ -138,9 +141,9 @@ TEST(MakeLogRawBufferTest, MakeBufferFromInteger)
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     constexpr const char expected[]{0, 0, 0, 15};
 #else
-    constexpr const char expected[]{15, 0, 0, 0};
+    constexpr const char kExpected[]{15, 0, 0, 0};
 #endif
-    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(expected)));
+    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(kExpected)));
 }
 
 TEST(MakeLogRawBufferTest, MakeBufferFromIntegerStdArray)
@@ -156,9 +159,9 @@ TEST(MakeLogRawBufferTest, MakeBufferFromIntegerStdArray)
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     constexpr const char expected[]{0, 0, 0, 15, 0, 0, 0, 16};
 #else
-    constexpr const char expected[]{15, 0, 0, 0, 16, 0, 0, 0};
+    constexpr const char kExpected[]{15, 0, 0, 0, 16, 0, 0, 0};
 #endif
-    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(expected)));
+    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(kExpected)));
 }
 
 TEST(MakeLogRawBufferTest, MakeBufferFromSpan)
@@ -175,9 +178,9 @@ TEST(MakeLogRawBufferTest, MakeBufferFromSpan)
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     constexpr const char expected[]{0, 0, 0, 15, 0, 0, 0, 16};
 #else
-    constexpr const char expected[]{15, 0, 0, 0, 16, 0, 0, 0};
+    constexpr const char kExpected[]{15, 0, 0, 0, 16, 0, 0, 0};
 #endif
-    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(expected)));
+    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(kExpected)));
 }
 
 TEST(MakeLogRawBufferTest, MakeBufferFromVector)
@@ -193,9 +196,9 @@ TEST(MakeLogRawBufferTest, MakeBufferFromVector)
 #if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
     constexpr const char expected[]{0, 0, 0, 15, 0, 0, 0, 16};
 #else
-    constexpr const char expected[]{15, 0, 0, 0, 16, 0, 0, 0};
+    constexpr const char kExpected[]{15, 0, 0, 0, 16, 0, 0, 0};
 #endif
-    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(expected)));
+    EXPECT_TRUE(std::equal(log_raw_buffer.cbegin(), log_raw_buffer.cend(), std::begin(kExpected)));
 }
 
 }  // namespace

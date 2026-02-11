@@ -260,10 +260,10 @@ class LogStream final
     - The code with '<<' is not a left shift operator but an overload for logging the respective types.
         code analysis tools tend to assume otherwise hence a false positive.
     */
-    template <std::size_t N>
+    template <std::size_t n>
     // NOLINTBEGIN(modernize-avoid-c-arrays): required for logging string literals without array-to-pointer decay
     // coverity[autosar_cpp14_a13_2_2_violation : FALSE] see above
-    LogStream& operator<<(const LogString::CharType (&array)[N]) noexcept
+    LogStream& operator<<(const LogString::CharType (&array)[n]) noexcept
     // NOLINTEND(modernize-avoid-c-arrays): see above
     {
         const LogString value{std::forward<decltype(array)>(array)};

@@ -29,14 +29,14 @@ namespace detail
 {
 using PeriodSuffixMap = std::unordered_map<std::type_index, std::string_view>;
 
-extern const PeriodSuffixMap PeriodToSuffix;
+extern const PeriodSuffixMap kPeriodToSuffix;
 }  // namespace detail
 
 template <typename Period>
 std::string_view DurationUnitSuffix() noexcept
 {
-    auto result = detail::PeriodToSuffix.find(typeid(typename Period::type));
-    if (result != detail::PeriodToSuffix.end())  // LCOV_EXCL_BR_LINE : else branch cannot be reached
+    auto result = detail::kPeriodToSuffix.find(typeid(typename Period::type));
+    if (result != detail::kPeriodToSuffix.end())  // LCOV_EXCL_BR_LINE : else branch cannot be reached
     {
         return result->second;
     }
@@ -51,4 +51,4 @@ std::string_view DurationUnitSuffix() noexcept
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_COMMON_H

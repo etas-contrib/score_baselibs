@@ -31,8 +31,8 @@ namespace
 using ::testing::_;
 using ::testing::Return;
 
-const SlotHandle HANDLE{42};
-const auto CONTEXT = std::string_view{"MYCT"};
+const SlotHandle kHandle{42};
+const auto kContext = std::string_view{"MYCT"};
 
 TEST(Logging, CanSetAndRetrieveDefaultRecorder)
 {
@@ -57,11 +57,11 @@ class LoggingFixture : public ::testing::Test
   public:
     LoggingFixture()
     {
-        score::mw::log::SetLogRecorder(&recorder_mock_);
-        EXPECT_CALL(recorder_mock_, StopRecord(HANDLE)).Times(1);
+        score::mw::log::SetLogRecorder(&recorder_mock);
+        EXPECT_CALL(recorder_mock, StopRecord(kHandle)).Times(1);
     }
 
-    RecorderMock recorder_mock_{};
+    RecorderMock recorder_mock{};
 };
 
 TEST_F(LoggingFixture, CanLogVerboseWithoutContext)
@@ -75,7 +75,7 @@ TEST_F(LoggingFixture, CanLogVerboseWithoutContext)
     // Given nothing
     // Given nothing
     // Expecting a log record of level verbose
-    EXPECT_CALL(recorder_mock_, StartRecord(_, LogLevel::kVerbose)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(_, LogLevel::kVerbose)).WillOnce(Return(kHandle));
 
     // When logging at level verbose
     score::mw::log::LogVerbose() << 42;
@@ -91,7 +91,7 @@ TEST_F(LoggingFixture, CanLogDebugWithoutContext)
 
     // Given nothing
     // Expecting a log record of level debug
-    EXPECT_CALL(recorder_mock_, StartRecord(_, LogLevel::kDebug)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(_, LogLevel::kDebug)).WillOnce(Return(kHandle));
 
     // When logging at level debug
     score::mw::log::LogDebug() << 42;
@@ -107,7 +107,7 @@ TEST_F(LoggingFixture, CanLogInfoWithoutContext)
 
     // Given nothing
     // Expecting a log record of level info
-    EXPECT_CALL(recorder_mock_, StartRecord(_, LogLevel::kInfo)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(_, LogLevel::kInfo)).WillOnce(Return(kHandle));
 
     // When logging at level info
     score::mw::log::LogInfo() << 42;
@@ -123,7 +123,7 @@ TEST_F(LoggingFixture, CanLogWarnWithoutContext)
 
     // Given nothing
     // Expecting a log record of level warn
-    EXPECT_CALL(recorder_mock_, StartRecord(_, LogLevel::kWarn)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(_, LogLevel::kWarn)).WillOnce(Return(kHandle));
 
     // When logging at level warn
     score::mw::log::LogWarn() << 42;
@@ -139,7 +139,7 @@ TEST_F(LoggingFixture, CanLogErrorWithoutContext)
 
     // Given nothing
     // Expecting a log record of level error
-    EXPECT_CALL(recorder_mock_, StartRecord(_, LogLevel::kError)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(_, LogLevel::kError)).WillOnce(Return(kHandle));
 
     // When logging at level error
     score::mw::log::LogError() << 42;
@@ -155,7 +155,7 @@ TEST_F(LoggingFixture, CanLogFatalWithoutContext)
 
     // Given nothing
     // Expecting a log record of level fatal
-    EXPECT_CALL(recorder_mock_, StartRecord(_, LogLevel::kFatal)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(_, LogLevel::kFatal)).WillOnce(Return(kHandle));
 
     // When logging at level fatal
     score::mw::log::LogFatal() << 42;
@@ -171,10 +171,10 @@ TEST_F(LoggingFixture, CanLogVerboseWitContext)
 
     // Given nothing
     // Expecting a log record of level verbose
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kVerbose)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kVerbose)).WillOnce(Return(kHandle));
 
     // When logging at level verbose
-    score::mw::log::LogVerbose(CONTEXT) << 42;
+    score::mw::log::LogVerbose(kContext) << 42;
 }
 
 TEST_F(LoggingFixture, CanLogDebugWithContext)
@@ -187,10 +187,10 @@ TEST_F(LoggingFixture, CanLogDebugWithContext)
 
     // Given nothing
     // Expecting a log record of level debug
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kDebug)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kDebug)).WillOnce(Return(kHandle));
 
     // When logging at level debug
-    score::mw::log::LogDebug(CONTEXT) << 42;
+    score::mw::log::LogDebug(kContext) << 42;
 }
 
 TEST_F(LoggingFixture, CanLogInfoWithContext)
@@ -203,10 +203,10 @@ TEST_F(LoggingFixture, CanLogInfoWithContext)
 
     // Given nothing
     // Expecting a log record of level info
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kInfo)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kInfo)).WillOnce(Return(kHandle));
 
     // When logging at level info
-    score::mw::log::LogInfo(CONTEXT) << 42;
+    score::mw::log::LogInfo(kContext) << 42;
 }
 
 TEST_F(LoggingFixture, CanLogWarnWithContext)
@@ -219,10 +219,10 @@ TEST_F(LoggingFixture, CanLogWarnWithContext)
 
     // Given nothing
     // Expecting a log record of level warn
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kWarn)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kWarn)).WillOnce(Return(kHandle));
 
     // When logging at level warn
-    score::mw::log::LogWarn(CONTEXT) << 42;
+    score::mw::log::LogWarn(kContext) << 42;
 }
 
 TEST_F(LoggingFixture, CanLogErrorWithContext)
@@ -235,10 +235,10 @@ TEST_F(LoggingFixture, CanLogErrorWithContext)
 
     // Given nothing
     // Expecting a log record of level error
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kError)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kError)).WillOnce(Return(kHandle));
 
     // When logging at level error
-    score::mw::log::LogError(CONTEXT) << 42;
+    score::mw::log::LogError(kContext) << 42;
 }
 
 TEST_F(LoggingFixture, CanLogFatalWithContext)
@@ -251,10 +251,10 @@ TEST_F(LoggingFixture, CanLogFatalWithContext)
 
     // Given nothing
     // Expecting a log record of level fatal
-    EXPECT_CALL(recorder_mock_, StartRecord(CONTEXT, LogLevel::kFatal)).WillOnce(Return(HANDLE));
+    EXPECT_CALL(recorder_mock, StartRecord(kContext, LogLevel::kFatal)).WillOnce(Return(kHandle));
 
     // When logging at level fatal
-    score::mw::log::LogFatal(CONTEXT) << 42;
+    score::mw::log::LogFatal(kContext) << 42;
 }
 
 }  // namespace

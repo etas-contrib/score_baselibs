@@ -159,16 +159,16 @@ class LogString
     }
 
     /// \brief Constructs `LogString` as view over a bounded character array.
-    template <std::size_t N>
+    template <std::size_t n>
     // NOLINTBEGIN(cppcoreguidelines-pro-type-member-init): false positive, this constructor delegates to another one
     // NOLINTBEGIN(google-explicit-constructor, modernize-avoid-c-arrays): allow implicit conversion from char array
     // NOLINTNEXTLINE(score-banned-function): using `std::data()` is valid here since size information is known via `N`
-    constexpr LogString(const CharType (&array)[N]) : LogString(std::data(array), N - 1U)
+    constexpr LogString(const CharType (&array)[n]) : LogString(std::data(array), n - 1U)
     // NOLINTEND(google-explicit-constructor, modernize-avoid-c-arrays)
     // NOLINTEND(cppcoreguidelines-pro-type-member-init)
     {
-        static_assert(N > 0U, "character array must have at least 1 element");
-        EnsureIsNullCharacter(array[N - 1U]);
+        static_assert(n > 0U, "character array must have at least 1 element");
+        EnsureIsNullCharacter(array[n - 1U]);
     }
 
     /// \brief Constructs `LogString` as view over a character sequence pointed-to via `str`.
@@ -229,12 +229,12 @@ class LogSlog2Message
 /// \brief Convenience method for logging character array
 /// \public
 /// \note Helps for example to avoid array-to-pointer decay when logging char[] literals or macros (such as __func__).
-template <std::size_t N>
+template <std::size_t n>
 [[deprecated(
     "SPP_DEPRECATION: Making use of `mw::log::LogStr()` is no longer required since `mw::log::LogStream` "
     "meanwhile supports logging string literals natively via its `operator<<`.")]] constexpr LogString
 // NOLINTNEXTLINE(modernize-avoid-c-arrays): required for avoiding implicit array-to-pointer decay in case of char array
-LogStr(const LogString::CharType (&array)[N]) noexcept
+LogStr(const LogString::CharType (&array)[n]) noexcept
 {
     const LogString result{std::forward<decltype(array)>(array)};
     return result;
@@ -285,8 +285,8 @@ inline LogRawBuffer MakeLogRawBuffer(const score::cpp::span<T> values)
 {
     // It is used by static_assert to check scalar types.
     // coverity[autosar_cpp14_a0_1_1_violation : FALSE]
-    constexpr const bool IsEligible = std::is_scalar<T>::value;
-    static_assert(IsEligible, "Only scalar types are allowed for dumping for now.");
+    constexpr const bool kIsEligible = std::is_scalar<T>::value;
+    static_assert(kIsEligible, "Only scalar types are allowed for dumping for now.");
 
     using SpanSizeType = typename score::cpp::span<T>::size_type;
     SCORE_LANGUAGE_FUTURECPP_PRECONDITION_MESSAGE(values.size() >= static_cast<SpanSizeType>(0), "score::cpp::span with negative size refused.");
@@ -324,14 +324,14 @@ inline LogRawBuffer MakeLogRawBuffer(const std::vector<T>& values) noexcept
 /// \tparam T Type of the data contained in the std::array. Must be a scalar.
 /// \param values The array of elements.
 /// \return An instance of LogRawBuffer, whose lifetime is limited by that of the given input array.
-template <typename T, std::size_t N>
-inline LogRawBuffer MakeLogRawBuffer(const std::array<T, N>& values) noexcept
+template <typename T, std::size_t n>
+inline LogRawBuffer MakeLogRawBuffer(const std::array<T, n>& values) noexcept
 {
-    return MakeLogRawBuffer(score::cpp::span<const T>(values.data(), static_cast<typename score::cpp::span<const T>::size_type>(N)));
+    return MakeLogRawBuffer(score::cpp::span<const T>(values.data(), static_cast<typename score::cpp::span<const T>::size_type>(n)));
 }
 
 }  // namespace log
 }  // namespace mw
 }  // namespace score
 
-#endif
+#endif  // SCORE_MW_LOG_TYPES_H

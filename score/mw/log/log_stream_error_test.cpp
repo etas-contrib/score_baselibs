@@ -31,7 +31,7 @@ namespace
 
 using ::testing::_;
 using ::testing::Return;
-const mw::log::SlotHandle HANDLE{42};
+const mw::log::SlotHandle kHandle{42};
 
 enum class MyErrorCode : score::result::ErrorCode
 {
@@ -56,11 +56,11 @@ class MyErrorDomain final : public score::result::ErrorDomain
     }
 };
 
-constexpr MyErrorDomain my_error_domain;
+constexpr MyErrorDomain kMyErrorDomain;
 
 score::result::Error MakeError(MyErrorCode code, std::string_view user_message = "") noexcept
 {
-    return {static_cast<score::result::ErrorCode>(code), my_error_domain, user_message};
+    return {static_cast<score::result::ErrorCode>(code), kMyErrorDomain, user_message};
 }
 
 class ErrorViaLogStreamFixture : public ::testing::Test
@@ -68,13 +68,13 @@ class ErrorViaLogStreamFixture : public ::testing::Test
   public:
     void SetUp() override
     {
-        mw::log::SetLogRecorder(&recorder_);
+        mw::log::SetLogRecorder(&recorder);
 
-        EXPECT_CALL(recorder_, StartRecord(_, _)).WillOnce(Return(HANDLE));
-        EXPECT_CALL(recorder_, StopRecord(_)).Times(1);
+        EXPECT_CALL(recorder, StartRecord(_, _)).WillOnce(Return(kHandle));
+        EXPECT_CALL(recorder, StopRecord(_)).Times(1);
     }
 
-    mw::log::RecorderMock recorder_{};
+    mw::log::RecorderMock recorder{};
 };
 
 TEST_F(ErrorViaLogStreamFixture, CanStreamViaRValueStream)
@@ -83,11 +83,11 @@ TEST_F(ErrorViaLogStreamFixture, CanStreamViaRValueStream)
     const score::result::Error unit{MyErrorCode::kFirstError, "We had a parsing failure"};
 
     // Expecting that this error message is logged
-    EXPECT_CALL(recorder_, LogStringView(_, {"Error "}));
-    EXPECT_CALL(recorder_, LogStringView(_, {"First Error!"}));
-    EXPECT_CALL(recorder_, LogStringView(_, {" occurred"}));
-    EXPECT_CALL(recorder_, LogStringView(_, {" with message "}));
-    EXPECT_CALL(recorder_, LogStringView(_, {"We had a parsing failure"}));
+    EXPECT_CALL(recorder, LogStringView(_, {"Error "}));
+    EXPECT_CALL(recorder, LogStringView(_, {"First Error!"}));
+    EXPECT_CALL(recorder, LogStringView(_, {" occurred"}));
+    EXPECT_CALL(recorder, LogStringView(_, {" with message "}));
+    EXPECT_CALL(recorder, LogStringView(_, {"We had a parsing failure"}));
 
     // When streaming it into an r-value LogStream
     mw::log::LogError() << unit;
@@ -99,11 +99,11 @@ TEST_F(ErrorViaLogStreamFixture, StreamIntoMwLogStream2)
     const score::result::Error unit{MyErrorCode::kFirstError, "We had a parsing failure"};
 
     // Expecting that this error message is logged
-    EXPECT_CALL(recorder_, LogStringView(_, {"Error "}));
-    EXPECT_CALL(recorder_, LogStringView(_, {"First Error!"}));
-    EXPECT_CALL(recorder_, LogStringView(_, {" occurred"}));
-    EXPECT_CALL(recorder_, LogStringView(_, {" with message "}));
-    EXPECT_CALL(recorder_, LogStringView(_, {"We had a parsing failure"}));
+    EXPECT_CALL(recorder, LogStringView(_, {"Error "}));
+    EXPECT_CALL(recorder, LogStringView(_, {"First Error!"}));
+    EXPECT_CALL(recorder, LogStringView(_, {" occurred"}));
+    EXPECT_CALL(recorder, LogStringView(_, {" with message "}));
+    EXPECT_CALL(recorder, LogStringView(_, {"We had a parsing failure"}));
 
     // When streaming it into an l-value LogStream
     auto stream = mw::log::LogError();

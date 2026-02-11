@@ -49,8 +49,8 @@ TEST(LogLevelTesting, EnsureMaxLevelCoversAllEnumCases)
 TEST(LogLevelTesting, EnsureThatGetLogLevelFromU8WillReturnTheCandidateLogLevelIfItIsWithinTheLogLevelEnumValues)
 {
     // Let's pick any value within the LogLevel Enum class.
-    constexpr std::uint8_t log_level_u8{3};
-    const auto log_level = GetLogLevelFromU8(log_level_u8);
+    constexpr std::uint8_t kLogLevelU8{3};
+    const auto log_level = GetLogLevelFromU8(kLogLevelU8);
 
     EXPECT_EQ(log_level, LogLevel::kWarn);
 }
@@ -58,8 +58,8 @@ TEST(LogLevelTesting, EnsureThatGetLogLevelFromU8WillReturnTheCandidateLogLevelI
 TEST(LogLevelTesting, EnsureThatGetLogLevelFromU8WillReturnKOffIfTheCandidateLogLevelIsNotWithinTheLogLevelEnumValues)
 {
     // Let's take any value not within the LogLevel Enum class.
-    constexpr std::uint8_t log_level_u8{8};
-    const auto log_level = GetLogLevelFromU8(log_level_u8);
+    constexpr std::uint8_t kLogLevelU8{8};
+    const auto log_level = GetLogLevelFromU8(kLogLevelU8);
 
     EXPECT_EQ(log_level, LogLevel::kOff);
 }
@@ -67,8 +67,8 @@ TEST(LogLevelTesting, EnsureThatGetLogLevelFromU8WillReturnKOffIfTheCandidateLog
 TEST(LogLevelTesting, EnsureThatTryGetLogLevelFromU8WillReturnTheCandidateLogLevelIfItIsWithinTheLogLevelEnumValues)
 {
     // Let's pick any value within the LogLevel Enum class.
-    constexpr std::uint8_t log_level_u8{3};
-    const auto log_level = TryGetLogLevelFromU8(log_level_u8);
+    constexpr std::uint8_t kLogLevelU8{3};
+    const auto log_level = TryGetLogLevelFromU8(kLogLevelU8);
 
     EXPECT_EQ(log_level.value(), LogLevel::kWarn);
 }
@@ -77,8 +77,8 @@ TEST(LogLevelTesting,
      EnsureThatTryGetLogLevelFromU8WillReturnNullIfTheCandidateLogLevelIsNotWithinTheLogLevelEnumValues)
 {
     // Let's take any value not within the LogLevel Enum class.
-    constexpr std::uint8_t log_level_u8{8};
-    const auto log_level = TryGetLogLevelFromU8(log_level_u8);
+    constexpr std::uint8_t kLogLevelU8{8};
+    const auto log_level = TryGetLogLevelFromU8(kLogLevelU8);
 
     EXPECT_FALSE(log_level.has_value());
 }

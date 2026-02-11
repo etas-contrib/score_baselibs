@@ -139,16 +139,16 @@ class RecorderMock : public Recorder
         LogUint64(handle, value.value);
     }
 
-    MOCK_METHOD(void, Log_LogRawBuffer, (const SlotHandle&, const void*, const uint64_t), (noexcept));
+    MOCK_METHOD(void, LogLogRawBuffer, (const SlotHandle&, const void*, const uint64_t), (noexcept));
     void Log(const SlotHandle& handle, LogRawBuffer value) noexcept override
     {
-        Log_LogRawBuffer(handle, value.data(), static_cast<uint64_t>(value.size()));
+        LogLogRawBuffer(handle, value.data(), static_cast<uint64_t>(value.size()));
     }
 
-    MOCK_METHOD(void, Log_LogSlog2Message, (const SlotHandle&, const uint16_t, const LogString), (noexcept));
+    MOCK_METHOD(void, LogLogSlog2Message, (const SlotHandle&, const uint16_t, const LogString), (noexcept));
     void Log(const SlotHandle& handle, LogSlog2Message value) noexcept override
     {
-        Log_LogSlog2Message(handle, value.GetCode(), value.GetMessage());
+        LogLogSlog2Message(handle, value.GetCode(), value.GetMessage());
     }
 
     // TODO: To be uncommented once Ticket-106852 is resolved.

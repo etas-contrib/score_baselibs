@@ -208,10 +208,10 @@ score::ResultBlank StandardFilesystem::CopyFile(const Path& from,
 
 // Refer on top for suppression justification
 // coverity[autosar_cpp14_a15_5_3_violation : FALSE]
-Result<Blank> StandardFilesystem::CopyKnownFileType(const score::filesystem::Path& from,
-                                                    const score::filesystem::Path& dest,
-                                                    const score::filesystem::CopyOptions copy_option,
-                                                    const Result<FileStatus>& dest_status) const noexcept
+ResultBlank StandardFilesystem::CopyKnownFileType(const score::filesystem::Path& from,
+                                                  const score::filesystem::Path& dest,
+                                                  const score::filesystem::CopyOptions copy_option,
+                                                  const Result<FileStatus>& dest_status) const noexcept
 {
     // missing check for if equivalent
     if ((dest_status.value().Type() != FileType::kRegular) || (copy_option == CopyOptions::kNone))
@@ -427,7 +427,7 @@ score::ResultBlank StandardFilesystem::RemoveAll(const Path& path) const noexcep
     return result;
 }
 
-Result<Blank> StandardFilesystem::RemoveContentFromExistingDirectory(const Path& path) const noexcept
+ResultBlank StandardFilesystem::RemoveContentFromExistingDirectory(const Path& path) const noexcept
 {
     ResultBlank result{};
 

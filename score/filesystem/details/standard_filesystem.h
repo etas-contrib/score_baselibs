@@ -55,11 +55,11 @@ class StandardFilesystem final : public IStandardFilesystem
     Result<bool> IsEmpty(const Path& path) const noexcept override;
 
   private:
-    Result<Blank> RemoveContentFromExistingDirectory(const Path& path) const noexcept;
-    Result<Blank> CopyKnownFileType(const Path& from,
-                                    const Path& dest,
-                                    const CopyOptions copy_option,
-                                    const Result<FileStatus>& dest_status) const noexcept;
+    ResultBlank RemoveContentFromExistingDirectory(const Path& path) const noexcept;
+    ResultBlank CopyKnownFileType(const Path& from,
+                                  const Path& dest,
+                                  const CopyOptions copy_option,
+                                  const Result<FileStatus>& dest_status) const noexcept;
 };
 
 }  // namespace filesystem

@@ -47,7 +47,6 @@ struct routing_table
     struct rt_msghdr header;
     struct sockaddr_in dst;
     struct sockaddr_in gw;
-    struct sockaddr_in mask;
 };
 
 struct NetUtilsQnxTestFixture : ::testing::Test
@@ -213,13 +212,11 @@ TEST_F(NetUtilsQnxTestFixture, GetDefaultGatewayIp4_SocketReadFailure)
             const auto* r_table = static_cast<const routing_table*>(buf);
             EXPECT_EQ(r_table->header.rtm_type, RTM_GET);
             EXPECT_EQ(r_table->header.rtm_pid, pid);
-            EXPECT_EQ(r_table->header.rtm_flags, RTF_UP | RTF_GATEWAY);
-            EXPECT_EQ(r_table->header.rtm_addrs, RTA_DST | RTA_NETMASK);
+            EXPECT_EQ(r_table->header.rtm_flags, RTF_UP);
+            EXPECT_EQ(r_table->header.rtm_addrs, RTA_DST);
             EXPECT_EQ(r_table->header.rtm_seq, SEQ);
 
             EXPECT_EQ(r_table->dst.sin_family, AF_INET);
-            EXPECT_EQ(r_table->gw.sin_family, AF_INET);
-            EXPECT_EQ(r_table->mask.sin_family, AF_INET);
             EXPECT_EQ(size, expected_size);
             return 6U;
         });
@@ -273,11 +270,37 @@ TEST_F(NetUtilsQnxTestFixture, GetDefaultGatewayIp4_SocketReadRTMGetCommandFaile
     EXPECT_FALSE(result.has_value());
 }
 
+TEST_F(NetUtilsQnxTestFixture, GetDefaultGatewayIp4_DefaultGatewayAddressNotSet)
+{
+    std::int32_t sock_fd{1};
+    routing_table r_table;
+    r_table.header.rtm_type = RTM_GET;
+    r_table.header.rtm_flags = 0x00U;
+    r_table.header.rtm_seq = SEQ;
+    r_table.header.rtm_pid = pid;
+    r_table.header.rtm_errno = 0;
+    r_table.gw.sin_addr.s_addr = 0x00000000;
+
+    EXPECT_CALL(unistd_mock_, getpid()).WillOnce(Return(pid));
+    EXPECT_CALL(socket_mock_, socket(Socket::Domain::kRoute, SOCK_RAW, 0)).WillOnce(Return(sock_fd));
+    EXPECT_CALL(unistd_mock_, write(sock_fd, _, _)).WillOnce(Return(6U));
+    EXPECT_CALL(unistd_mock_, read(sock_fd, _, _))
+        .WillOnce(DoAll(WithArgs<1, 2>([&r_table](void* buf, size_t size) {
+                            std::memcpy(buf, &r_table, sizeof(r_table));
+                            EXPECT_EQ(size, sizeof(r_table));
+                        }),
+                        Return(score::cpp::expected<ssize_t, score::os::Error>(sizeof(r_table)))));
+
+    const auto result = score::os::Netutils::instance().get_default_gateway_ip4();
+    EXPECT_FALSE(result.has_value());
+}
+
 TEST_F(NetUtilsQnxTestFixture, GetDefaultGatewayIp4_ReadGatewayAddressSuccess)
 {
     std::int32_t sock_fd{1};
     routing_table r_table;
     r_table.header.rtm_type = RTM_GET;
+    r_table.header.rtm_flags = RTF_UP | RTF_GATEWAY;
     r_table.header.rtm_seq = SEQ;
     r_table.header.rtm_pid = pid;
     r_table.header.rtm_errno = 0;

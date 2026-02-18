@@ -15,212 +15,213 @@
 std::string_view score::analysis::tracing::GenericTraceAPIErrorDomain::MessageFor(
     const score::result::ErrorCode& code) const noexcept
 {
-    std::string_view error_message;  // Variable to hold the error message
-    // No harm from going outside the range as that will jump to the default state in switch_case(a7_2_1),No harm to
-    // define the switch in that format (m6_4_3)
-    //  coverity[autosar_cpp14_a7_2_1_violation]
-    //  coverity[autosar_cpp14_m6_4_3_violation]
-    switch (static_cast<score::analysis::tracing::ErrorCode>(code))
+    std::string_view error_message{"Unknown generic error"};
+
+    switch (code)
     {
-        case ErrorCode::kNoErrorRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoErrorRecoverable):
             error_message = "No error occured";
             break;
-        case ErrorCode::kDaemonNotConnectedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonNotConnectedFatal):
             error_message = "Daemon was unexpectedly disconnected";
             break;
-        case ErrorCode::kInvalidAppInstanceIdFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kInvalidAppInstanceIdFatal):
             error_message = "Invalid app instance ID";
             break;
-        case ErrorCode::kInvalidArgumentFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kInvalidArgumentFatal):
             error_message = "Invalid argument";
             break;
-        case ErrorCode::kInvalidBindingTypeFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kInvalidBindingTypeFatal):
             error_message = "Invalid binding type";
             break;
-        case ErrorCode::kNotEnoughMemoryRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNotEnoughMemoryRecoverable):
             error_message = "Not enough memory for allocation";
             break;
-        case ErrorCode::kNoMetaInfoProvidedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoMetaInfoProvidedRecoverable):
             error_message = "No meta info were provided";
             break;
-        case ErrorCode::kNotEnoughMemoryInContainerRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNotEnoughMemoryInContainerRecoverable):
             error_message = "Not enough memory in trace job container";
             break;
-        case ErrorCode::kOffsetCalculationFailedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kOffsetCalculationFailedRecoverable):
             error_message = "Offset calculation failed";
             break;
-        case ErrorCode::kAtomicRingBufferFullRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kAtomicRingBufferFullRecoverable):
             error_message = "Atomic ring buffer full";
             break;
-        case ErrorCode::kAtomicRingBufferEmptyRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kAtomicRingBufferEmptyRecoverable):
             error_message = "Atomic ring buffer empty";
             break;
-        case ErrorCode::kAtomicRingBufferMaxRetriesRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kAtomicRingBufferMaxRetriesRecoverable):
             error_message = "Atomic ring buffer access failed max retry times";
             break;
-        case ErrorCode::kModuleNotInitializedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kModuleNotInitializedRecoverable):
             error_message = "Module not initialized";
             break;
-        case ErrorCode::kModuleInitializedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kModuleInitializedRecoverable):
             error_message = "Module already initialized";
             break;
-        case ErrorCode::kDaemonNotConnectedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonNotConnectedRecoverable):
             error_message = "Daemon is not yet available";
             break;
-        case ErrorCode::kRingBufferFullRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferFullRecoverable):
             error_message = "Ring buffer full";
             break;
-        case ErrorCode::kRingBufferEmptyRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferEmptyRecoverable):
             error_message = "Ring buffer empty";
             break;
-        case ErrorCode::kRingBufferNoEmptyElementRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferNoEmptyElementRecoverable):
             error_message = "No empty element in the ring buffer could be acquired";
             break;
-        case ErrorCode::kRingBufferNoReadyElementRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferNoReadyElementRecoverable):
             error_message = "No ready element in the ring buffer could be acquired";
             break;
-        case ErrorCode::kRingBufferNotInitializedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferNotInitializedRecoverable):
             error_message = "Ring buffer not initialized";
             break;
-        case ErrorCode::kRingBufferInitializedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferInitializedRecoverable):
             error_message = "Ring buffer already initialized";
             break;
-        case ErrorCode::kRingBufferInvalidStateRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferInvalidStateRecoverable):
             error_message = "Invalid state of ring buffer";
             break;
-        case ErrorCode::kRingBufferInvalidMemoryResourceRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferInvalidMemoryResourceRecoverable):
             error_message = "Invalid memory resource passed to constructor";
             break;
-        case ErrorCode::kRingBufferSharedMemoryCreationFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemoryCreationFatal):
             error_message = "Failed to create shared memory for shared memory ring buffer";
             break;
-        case ErrorCode::kRingBufferSharedMemoryHandleCreationFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemoryHandleCreationFatal):
             error_message = "Failed to create shared memory handle for shared memory ring buffer";
             break;
-        case ErrorCode::kRingBufferSharedMemorySealFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemorySealFatal):
             error_message = "Failed to seal shared memory of shared memory ring buffer";
             break;
-        case ErrorCode::kRingBufferSharedMemoryHandleOpenFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemoryHandleOpenFatal):
             error_message = "Failed to open shared memory handle of shared memory ring buffer";
             break;
-        case ErrorCode::kRingBufferSharedMemoryFstatFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemoryFstatFatal):
             error_message = "Failed to perform fstat on shared memory ring buffer file descriptor";
             break;
-        case ErrorCode::kRingBufferSharedMemoryMapFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemoryMapFatal):
             error_message = "Failed to to map memory region of shared memory ring buffer";
             break;
-        case ErrorCode::kRingBufferSharedMemorySizeCalculationFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kRingBufferSharedMemorySizeCalculationFatal):
             error_message =
                 "Calculated shared memory size doesn't match the size of the original created shared memory";
             break;
-        case ErrorCode::kNoSpaceLeftForAllocationRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoSpaceLeftForAllocationRecoverable):
             error_message = "No space to allocate in TMD shared memory";
             break;
-        case ErrorCode::kIndexOutOfBoundsInSharedListRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kIndexOutOfBoundsInSharedListRecoverable):
             error_message = "Index is out of bounds";
             break;
-        case ErrorCode::kMemoryCorruptionDetectedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kMemoryCorruptionDetectedFatal):
             error_message = "Memory Corruption detected";
             break;
-        case ErrorCode::kDaemonConnectionFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonConnectionFailedFatal):
             error_message = "Daemon connection failed";
             break;
-        case ErrorCode::kDaemonCommunicatorNotSupportedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonCommunicatorNotSupportedFatal):
             error_message = "Daemon communication is supported only with QNX";
             break;
-        case ErrorCode::kServerConnectionNameOpenFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kServerConnectionNameOpenFailedFatal):
             error_message = "Server name open failed";
             break;
-        case ErrorCode::kDaemonTerminationDetectionFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonTerminationDetectionFailedFatal):
             error_message = "Daemon termination detection failed";
             break;
-        case ErrorCode::kMessageSendFailedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kMessageSendFailedRecoverable):
             error_message = "Failed to send the message";
             break;
-        case ErrorCode::kSharedMemoryObjectRegistrationFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectRegistrationFailedFatal):
             error_message = "Failed to register a shared-memory object";
             break;
-        case ErrorCode::kSharedMemoryObjectAlreadyRegisteredRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectAlreadyRegisteredRecoverable):
             error_message = "Shared-memory object is already registered with this file descriptor/path";
             break;
-        case ErrorCode::kSharedMemoryObjectNotInTypedMemoryFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectNotInTypedMemoryFatal):
             error_message = "Request to register non typed-memory";
             break;
-        case ErrorCode::kSharedMemoryObjectUnregisterFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectUnregisterFailedFatal):
             error_message = "Failed to unregister a shared-memory object";
             break;
-        case ErrorCode::kSharedMemoryObjectHandleCreationFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectHandleCreationFailedFatal):
             error_message = "Failed to create a shared-memory object handle";
             break;
-        case ErrorCode::kSharedMemoryObjectHandleDeletionFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectHandleDeletionFailedFatal):
             error_message = "Failed to delete a shared-memory object handle";
             break;
-        case ErrorCode::kSharedMemoryObjectFlagsRetrievalFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kSharedMemoryObjectFlagsRetrievalFailedFatal):
             error_message = "Failed to retrieve the shared memory object's flags";
             break;
-        case ErrorCode::kWrongMessageIdRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kWrongMessageIdRecoverable):
             error_message = "Wrong message id";
             break;
-        case ErrorCode::kWrongClientIdRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kWrongClientIdRecoverable):
             error_message = "Wrong client id";
             break;
-        case ErrorCode::kClientNameAlreadyUsedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kClientNameAlreadyUsedRecoverable):
             error_message = "Client name is already used by different process";
             break;
-        case ErrorCode::kBadFileDescriptorFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kBadFileDescriptorFatal):
             error_message = "Bad file descriptor";
             break;
-        case ErrorCode::kWrongHandleRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kWrongHandleRecoverable):
             error_message = "Wrong memory handle of local trace job";
             break;
-        case ErrorCode::kCallbackAlreadyRegisteredRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kCallbackAlreadyRegisteredRecoverable):
             error_message = "Callback already registered for the specific client id";
             break;
-        case ErrorCode::kNoFreeSlotToSaveTheCallbackRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoFreeSlotToSaveTheCallbackRecoverable):
             error_message = "No free slot found to save the callback";
             break;
-        case ErrorCode::kClientNotFoundRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kClientNotFoundRecoverable):
             error_message = "Client ID not found";
             break;
-        case ErrorCode::kInvalidShmObjectHandleFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kInvalidShmObjectHandleFatal):
             error_message = "Invalid SHM object handle";
             break;
-        case ErrorCode::kNoDeallocatorCallbackRegisteredFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoDeallocatorCallbackRegisteredFatal):
             error_message = "No deallocator callback registered";
             break;
-        case ErrorCode::kNoMoreSpaceForNewClientFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoMoreSpaceForNewClientFatal):
             error_message = "No More Space for new client, Max Number of Clients allocated";
             break;
-        case ErrorCode::kNoMoreSpaceForNewShmObjectFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kNoMoreSpaceForNewShmObjectFatal):
             error_message = "No More Space for new SHM object, Max Number of SHM objects allocated";
             break;
-        case ErrorCode::kTerminalFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kTerminalFatal):
             error_message = "Terminal Fatal";
             break;
-        case ErrorCode::kDaemonNotAvailableFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonNotAvailableFatal):
             error_message = "LTPM Daemon not available";
             break;
-        case ErrorCode::kFailedRegisterCachedClientsFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kFailedRegisterCachedClientsFatal):
             error_message = "Failed to register the cached client registration requests";
             break;
-        case ErrorCode::kFailedRegisterCachedShmObjectsFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kFailedRegisterCachedShmObjectsFatal):
             error_message = "Failed to register the cached SHM object registration requests";
             break;
-        case ErrorCode::kFailedToProcessJobsFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kFailedToProcessJobsFatal):
             error_message = "Failed to process Jobs";
             break;
-        case ErrorCode::kTraceJobAllocatorInitializationFailedFatal:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kTraceJobAllocatorInitializationFailedFatal):
             error_message = "TraceJobAllocator initialization failed";
             break;
-        case ErrorCode::kDaemonIsDisconnectedRecoverable:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kDaemonIsDisconnectedRecoverable):
             error_message = "Daemon is disconnected";
             break;
-        case ErrorCode::kGenericErrorRecoverable:
-        case ErrorCode::kLastRecoverable:
-        default:
+        case static_cast<score::result::ErrorCode>(ErrorCode::kGenericErrorRecoverable):
             error_message = "Unknown generic error";
             break;
+        case static_cast<score::result::ErrorCode>(ErrorCode::kLastRecoverable):
+            error_message = "Unknown generic error";
+            break;
+        default:
+            break;
     }
+
     return error_message;
 }
 
@@ -237,9 +238,8 @@ score::result::Error score::analysis::tracing::MakeError(const score::analysis::
 
 bool score::analysis::tracing::IsErrorRecoverable(const score::analysis::tracing::ErrorCode code) noexcept
 {
-    bool error = false;
-    // No harm to define the switch in that format (m6_4_3)
-    //  coverity[autosar_cpp14_m6_4_3_violation]
+    bool is_recoverable{false};
+
     switch (code)
     {
         case ErrorCode::kNoErrorRecoverable:
@@ -276,7 +276,7 @@ bool score::analysis::tracing::IsErrorRecoverable(const score::analysis::tracing
         case ErrorCode::kIndexOutOfBoundsInSharedListRecoverable:
         case ErrorCode::kMemoryCorruptionDetectedFatal:
         case ErrorCode::kDaemonIsDisconnectedRecoverable:
-            error = true;
+            is_recoverable = true;
             break;
         case ErrorCode::kDaemonNotConnectedFatal:
         case ErrorCode::kInvalidArgumentFatal:
@@ -310,9 +310,11 @@ bool score::analysis::tracing::IsErrorRecoverable(const score::analysis::tracing
         case ErrorCode::kRingBufferSharedMemoryFstatFatal:
         case ErrorCode::kRingBufferSharedMemoryMapFatal:
         case ErrorCode::kRingBufferSharedMemorySizeCalculationFatal:
+            is_recoverable = false;
+            break;
         default:
-            error = false;
             break;
     }
-    return error;
+
+    return is_recoverable;
 }

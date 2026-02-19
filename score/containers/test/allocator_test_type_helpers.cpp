@@ -14,17 +14,7 @@
 
 namespace score::containers
 {
-
-std::size_t NonMoveableAndCopyableElementType::non_moveable_element_dtor_count{0U};
-
-std::size_t SpecialMemberFunctionRecordingType::constructor_count{0U};
-std::size_t SpecialMemberFunctionRecordingType::destructor_count{0U};
-std::size_t SpecialMemberFunctionRecordingType::copy_constructor_count{0U};
-std::size_t SpecialMemberFunctionRecordingType::copy_assignment_count{0U};
-std::size_t SpecialMemberFunctionRecordingType::move_constructor_count{0U};
-std::size_t SpecialMemberFunctionRecordingType::move_assignment_count{0U};
-
-auto operator==(const TriviallyConstructibleDestructibleType& lhs,
+    auto operator==(const TriviallyConstructibleDestructibleType& lhs,
                 const TriviallyConstructibleDestructibleType& rhs) noexcept -> bool
 {
     return (lhs.i == rhs.i && lhs.j == rhs.j);

@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
 
+load("@rules_cc//cc:defs.bzl", "cc_test")
 load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
 
 def cc_unit_test_suites_for_host_and_qnx(name, cc_unit_tests = None, visibility = None, test_suites_from_sub_packages = None, excluded_tests_filter = None):
@@ -90,7 +91,7 @@ def cc_unit_test(name, **kwargs):
         fail("'unit' tag already provided, please refrain from adding it manually.")
 
     kwargs["tags"].append("unit")
-    native.cc_test(
+    cc_test(
         name = name,
         size = "small",
         timeout = "short",

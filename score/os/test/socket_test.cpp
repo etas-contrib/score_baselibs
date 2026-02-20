@@ -429,11 +429,12 @@ TEST_F(SocketTestFixture, RecvFromClosedSocket)
     ASSERT_FALSE(receive_result.has_value());
 }
 
-TEST_F(SocketTestFixture, SendToInvalidAddress)
+TEST_F(SocketTestFixture, SendToInvalidFd)
 {
+    const auto INVALID_FD = -1;
     TestClientSocket(Socket::Domain::kIPv4, SOCK_DGRAM);
     InitServerAddr("255.255.255.255", kDefaultPortForTesting);
-    auto send_result = instance_.sendto(client_fd_,
+    auto send_result = instance_.sendto(INVALID_FD,
                                         msg_.data(),
                                         msg_.size(),
                                         Socket::MessageFlag::kNone,

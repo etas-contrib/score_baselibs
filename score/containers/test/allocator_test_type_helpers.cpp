@@ -14,7 +14,7 @@
 
 namespace score::containers
 {
-    auto operator==(const TriviallyConstructibleDestructibleType& lhs,
+auto operator==(const TriviallyConstructibleDestructibleType& lhs,
                 const TriviallyConstructibleDestructibleType& rhs) noexcept -> bool
 {
     return (lhs.i == rhs.i && lhs.j == rhs.j);

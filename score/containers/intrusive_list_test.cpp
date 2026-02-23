@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 #include "score/containers/intrusive_list.h"
+#include "score/quality/compiler_warnings/warnings.h"
 
 #include <gtest/gtest.h>
 
@@ -543,12 +544,8 @@ TEST(IntrusiveList, SixElementsInsertRemoveChecks)
     CheckEmpty(moved_list);
 }
 
-#pragma GCC diagnostic push
-#if defined(__has_warning)
-#if __has_warning("-Wself-move")
-#pragma GCC diagnostic ignored "-Wself-move"  // testing correctness of implementation
-#endif
-#endif
+DISABLE_WARNING_PUSH
+DISABLE_WARNING_SELF_MOVE  // testing correctness of implementation
 
 TEST(IntrusiveList, MoveAssignmentTest)
 {
@@ -593,7 +590,7 @@ TEST(IntrusiveList, MoveAssignmentTest)
     // NOLINTEND(bugprone-use-after-move): testing correctness of implementation
 }
 
-#pragma GCC diagnostic pop  // "-Wself-move"
+DISABLE_WARNING_POP  // "-Wself-move"
 
 TEST(IntrusiveList, EraseTest)
 {

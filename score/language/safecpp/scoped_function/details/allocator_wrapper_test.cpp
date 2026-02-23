@@ -106,14 +106,12 @@ TEST_F(AllocatorWrapperTest, CorrectlyHandlesSelfMoveAssignment)
     const AllocatorWrapperTest::Allocator testing_allocator{};
     AllocatorWrapper<AllocatorWrapperTest::Allocator> allocator_wrapper{testing_allocator};
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wself-move"
-#endif
+    DISABLE_WARNING_PUSH
+    DISABLE_WARNING_SELF_MOVE
+
     allocator_wrapper = std::move(allocator_wrapper);
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+
+    DISABLE_WARNING_POP
 
     std::byte* memory = allocator_wrapper->allocate(4);
     ASSERT_NE(memory, nullptr);

@@ -15,6 +15,7 @@
 #include "score/language/safecpp/scoped_function/details/allocator_aware_erased_type.h"
 #include "score/language/safecpp/scoped_function/details/instrumented_memory_resource.h"
 #include "score/language/safecpp/scoped_function/details/testing_allocator.h"
+#include "score/quality/compiler_warnings/warnings.h"
 
 #include <score/memory.hpp>
 
@@ -268,14 +269,12 @@ TEST_F(AllocatorAwareTypeErasurePointerTest, CanMoveAssignSelfWithoutAdverseEffe
     auto target = MakeAllocatorAwareTypeErasurePointer<SomeInterface, SomeInterfaceImpl, PropagatingAllocator>(
         propagating_allocator_, expected_data);
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wself-move"
-#endif
+    DISABLE_WARNING_PUSH
+    DISABLE_WARNING_SELF_MOVE
+
     target = std::move(target);
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+
+    DISABLE_WARNING_POP
 
     EXPECT_EQ(target->GetData(), expected_data);
 }

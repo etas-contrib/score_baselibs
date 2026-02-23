@@ -47,6 +47,7 @@ cc_library(
     deps = [
         ":type_erasure_pointer",
         "@score_baselibs//score/language/futurecpp",
+        "@score_baselibs//score/quality/compiler_warnings",
     ],
 )
 

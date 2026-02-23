@@ -15,6 +15,7 @@
 #include "score/language/safecpp/scoped_function/copyable_scoped_function.h"
 #include "score/language/safecpp/scoped_function/details/instrumented_memory_resource.h"
 #include "score/language/safecpp/scoped_function/move_only_scoped_function.h"
+#include "score/quality/compiler_warnings/warnings.h"
 
 #include <score/jthread.hpp>
 
@@ -122,14 +123,12 @@ TYPED_TEST(ScopeTest, CanMoveAssignToItselfWithNoAdverseEffects)
     Scope<> scope{};
     TypeParam function{scope, []() noexcept {}};
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wself-move"
-#endif
+    DISABLE_WARNING_PUSH
+    DISABLE_WARNING_SELF_MOVE
+
     scope = std::move(scope);
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+
+    DISABLE_WARNING_POP
 
     EXPECT_TRUE(function());
     scope.Expire();

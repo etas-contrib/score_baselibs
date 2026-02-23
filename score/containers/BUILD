@@ -19,7 +19,10 @@ cc_gtest_unit_test(
     name = "intrusive_list_test",
     srcs = ["intrusive_list_test.cpp"],
     features = COMPILER_WARNING_FEATURES,
-    deps = [":intrusivelist"],
+    deps = [
+        ":intrusivelist",
+        "@score_baselibs//score/quality/compiler_warnings",
+    ],
 )
 
 cc_unit_test(

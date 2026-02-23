@@ -41,6 +41,7 @@ cc_gtest_unit_test(
         ":scope",
         "@score_baselibs//score/language/futurecpp",
         "@score_baselibs//score/language/safecpp/scoped_function/details:instrumented_memory_resource",
+        "@score_baselibs//score/quality/compiler_warnings",
     ],
 )
 

@@ -54,7 +54,7 @@ enum class ReasonToNotIncrement
  * @tparam N Number of bits reserved for the counter (one extra bit is used for the flag).
  * @tparam MaxRetries Maximum number of retries for the increment operation to tolerate contention.
  */
-template <std::size_t N, std::size_t MaxRetries = 100>
+template <std::size_t N>
 class SaturatingIntegral
 {
     static_assert(N < 64U, "SaturatingIntegral<N>: N must be < 64 (needs N counter bits plus one flag bit)");
@@ -94,15 +94,26 @@ class SaturatingIntegral
             std::conditional_t<(N < 16U), std::uint16_t, std::conditional_t<(N < 32U), std::uint32_t, std::uint64_t>>>;
     };
 
+    using DataType = typename storage_type::type;
+
   public:
     using ReturnType = typename return_type::type;
-    using DataType = typename storage_type::type;
 
   private:
     static constexpr DataType FLAG_MASK = static_cast<DataType>(DataType{1U} << N);
     static constexpr DataType COUNTER_MASK = static_cast<DataType>(FLAG_MASK - 1U);
 
   public:
+    /**
+     * @brief Constructs a SaturatingIntegral object with a specified maximum number of retries.
+     *
+     * @param max_retries The maximum number of retries allowed. Defaults to 100.
+     *                     This value is stored and can be used to limit retry attempts
+     *                     in saturating integral operations.
+     *
+     * @note The internal value is initialized to 0.
+     */
+    explicit SaturatingIntegral(std::uint32_t max_retries = 100U) : max_retries_(max_retries), value_(0U) {};
     /**
      * @brief Maximum representable counter value (before saturation).
      *
@@ -116,7 +127,7 @@ class SaturatingIntegral
      * @return True if `std::atomic<DataType>` is guaranteed to be lock-free for all
      *         objects of this type; false otherwise.
      */
-    static bool IsAlwaysLockFree()
+    constexpr bool IsAlwaysLockFree() const noexcept
     {
         return std::atomic<DataType>::is_always_lock_free;
     }
@@ -134,7 +145,7 @@ class SaturatingIntegral
     {
         DataType old = value_.load(std::memory_order_relaxed);
 
-        for (std::size_t max_retries = 0; max_retries < MaxRetries; ++max_retries)
+        for (std::uint32_t retries = 0U; retries < max_retries_; ++retries)
         {
             if (old >= FLAG_MASK)
             {
@@ -143,7 +154,7 @@ class SaturatingIntegral
             }
 
             DataType counter = old & COUNTER_MASK;
-            if (value_.compare_exchange_weak(old, counter + 1, std::memory_order_relaxed, std::memory_order_relaxed))
+            if (value_.compare_exchange_weak(old, counter + 1U, std::memory_order_relaxed, std::memory_order_relaxed))
             {
                 return score::cpp::blank{};
             }
@@ -185,7 +196,7 @@ class SaturatingIntegral
         DataType val = value_.exchange(0U, std::memory_order_relaxed);
         if (val >= FLAG_MASK)
         {
-            return {0, true};
+            return {kMaxCounterValue, true};
         }
         else
         {
@@ -194,7 +205,8 @@ class SaturatingIntegral
     }
 
   private:
-    std::atomic<DataType> value_{0U};
+    std::uint32_t max_retries_;
+    std::atomic<DataType> value_;
 };
 
 }  // namespace tracing

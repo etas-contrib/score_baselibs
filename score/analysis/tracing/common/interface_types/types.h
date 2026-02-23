@@ -91,10 +91,20 @@ struct GlobalTraceContextId
 
 struct TmdStatistics
 {
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     std::size_t tmd_total;
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     std::size_t tmd_max;
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     std::size_t tmd_average;
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     std::pair<std::uint32_t, bool> tmd_allocate_retry_cntr_res;
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     std::pair<std::uint32_t, bool> tmd_allocate_call_cntr_res;
     // Suppress "AUTOSAR C++14 A9-6-1" rule finding. This rule states: "Data types used for interfacing with
     // hardware or conforming to communication protocols shall be trivial, standard-layout and only contain members
@@ -102,6 +112,8 @@ struct TmdStatistics
     // client_pid is a system-defined identifier used for OS process handling inside the same ECU (IPC).
     // No external communication interface is provided.
     // coverity[autosar_cpp14_a9_6_1_violation]
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     pid_t client_pid;
     // Suppress "AUTOSAR C++14 A9-6-1" rule finding. This rule states: "Data types used for interfacing with
     // hardware or conforming to communication protocols shall be trivial, standard-layout and only contain members
@@ -109,6 +121,8 @@ struct TmdStatistics
     // tmd_alloc_rate is used for internal calculations only inside the same ECU, not interfacing with external
     // hardware or communication protocols.
     // coverity[autosar_cpp14_a9_6_1_violation]
+    // No harm to define it as public
+    // coverity[autosar_cpp14_m11_0_1_violation]
     float tmd_alloc_rate;
 };
 

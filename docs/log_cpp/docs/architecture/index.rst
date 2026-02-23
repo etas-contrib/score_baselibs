@@ -101,11 +101,6 @@ Dynamic Architecture
 Interfaces
 ----------
 
-.. logic_arc_int:: Logging
-   :id: logic_arc_int__log_cpp__logging
-   :security: YES
-   :safety: ASIL_B
-   :status: valid
 
 .. logic_arc_int:: recorder
    :id: logic_arc_int__log_cpp__recorder

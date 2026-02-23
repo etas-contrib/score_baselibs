@@ -68,15 +68,21 @@ bazel_dep(name = "download_utils", version = "1.0.1")
 ## Custom Module Loading
 
 bazel_dep(name = "score_docs_as_code", version = "2.3.0")
+git_override(
+     module_name = "score_docs_as_code",
+     commit = "8cd9b194921122e345b03aa78d7a421164abaa37",
+     remote = "https://github.com/etas-contrib/score_docs-as-code.git",
+)
 bazel_dep(name = "score_process", version = "1.4.0")
 bazel_dep(name = "score_platform", version = "0.5.1")  # This is main score repo
 # bazel_dep(name = "score_virtualization", version = "0.0.1", dev_dependency = True)
 
 git_override(
     module_name = "score_platform",
-    commit = "6829d691dfd4521ce376e22400bb104197967b7c",
+    commit = "618e84e005aa83363ecba095d8370412bf45c739",
     remote = "https://github.com/etas-contrib/score_score.git",
 )
+
 bazel_dep(name = "score_tooling", version = "1.0.4")
 
 # We need the copyright exclusion feature

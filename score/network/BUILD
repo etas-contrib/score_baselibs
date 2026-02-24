@@ -1,5 +1,3 @@
-load("@rules_cc//cc:defs.bzl", "cc_library")
-
 # *******************************************************************************
 # Copyright (c) 2025 Contributors to the Eclipse Foundation
 #
@@ -12,6 +10,8 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 #
 # SPDX-License-Identifier: Apache-2.0
 # *******************************************************************************
+
+load("@rules_cc//cc:defs.bzl", "cc_library")
 load("@score_baselibs//third_party/itf:py_unittest_qnx_test.bzl", "py_unittest_qnx_test")
 
 test_suite(

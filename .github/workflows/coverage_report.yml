@@ -45,6 +45,10 @@ jobs:
         run: |
           bazel coverage --config=bl-x86_64-linux -- //score/... \
           -//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test
+      - name: Create external symlinks for genhtml
+        run: |
+          [ -d external ] || mkdir -p external
+          ln -sfn "$(bazel info execution_root)/external/flatbuffers+" external/flatbuffers+
       - name: Generate HTML Coverage Report
         run: |
           genhtml "$(bazel info output_path)/_coverage/_coverage_report.dat" \

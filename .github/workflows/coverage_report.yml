@@ -47,7 +47,14 @@ jobs:
           -//score/language/safecpp/aborts_upon_exception:abortsuponexception_toolchain_test
       - name: Generate HTML Coverage Report
         run: |
-          genhtml "$(bazel info output_path)/_coverage/_coverage_report.dat" \
+          # _ZN11flatbuffers9AllocatorD0Ev is the deleting destructor of an
+          # abstract class — compiler-generated dead code that can never be
+          # called. Erase it before rendering so it does not show as uncovered.
+          lcov \
+            --erase-functions '_ZN11flatbuffers9AllocatorD0Ev' \
+            -a "$(bazel info output_path)/_coverage/_coverage_report.dat" \
+            -o "_coverage_report.dat"
+          genhtml _coverage_report.dat" \
             -o=cpp_coverage \
             --show-details \
             --source-directory="$(bazel info execution_root)" \

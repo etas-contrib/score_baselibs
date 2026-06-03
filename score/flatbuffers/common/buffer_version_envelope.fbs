@@ -23,7 +23,7 @@
 
 include "buffer_version.fbs";
 
-namespace score.mw.flatbuffers;
+namespace score.flatbuffers;
 
 table BufferVersionEnvelope {
     version_info:BufferVersion;

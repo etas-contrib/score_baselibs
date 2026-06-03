@@ -1,10 +1,4 @@
-/// Demo FlatBuffer schema for a component — WRONG version_info placement.
-/// This schema is intentionally incorrect: version_info is placed inside the
-/// nested AdvancedSettings table instead of as field 0 of the root table.
-/// FlatBuffers and the serialize_versioned_buffer rule will compile this
-/// without error, but GetBufferVersion / VerifyBufferVersion will fail
-/// because the universal reader looks for version_info at vtable slot 0 of
-/// the root table only.
+/// Demo FlatBuffer schema for a component (versioned variant)
 include "buffer_version.fbs";
 
 namespace my_component.demo;
@@ -25,6 +19,11 @@ union DataPayloadUnion {
 table MyComponentConfig {
     /// Component identification — occupies vtable slot 0 (field 0), no version_info here
     component_name:string (required);
+
+    /// Buffer version — Should have been in slot 0 (field 0)
+    version_info:score.flatbuffers.BufferVersion;
+
+    /// Component identification
     component_id:uint32; // Implicit default is 0
 
     thread_pool_size:uint8 = 4; // Explicit default value
@@ -35,10 +34,6 @@ table MyComponentConfig {
 }
 
 table AdvancedSettings {
-    /// WRONG: version_info is buried inside a nested table, not the root table.
-    /// GetBufferVersion will return kVerificationFailed or zeros at runtime.
-    version_info:score.flatbuffers.BufferVersion;
-
     /// Enum example: operational mode (defaults to first enum value: EVENT_DRIVEN)
     mode:OperationMode;
 

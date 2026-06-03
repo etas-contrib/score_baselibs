@@ -59,6 +59,7 @@ def main():
     data["version_info"] = {
         "major_version": args.major,
         "minor_version": args.minor,
+        "type_marker": "BV",
     }
 
     with open(args.output, "w") as f:

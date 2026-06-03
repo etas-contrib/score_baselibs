@@ -18,7 +18,7 @@ union DataPayloadUnion {
 
 table MyComponentConfig {
     /// Buffer version — MUST be field 0 for universal buffer identification
-    version_info:score.mw.flatbuffers.BufferVersion;
+    version_info:score.flatbuffers.BufferVersion;
 
     /// Component identification
     component_name:string (required);

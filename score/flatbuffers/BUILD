@@ -43,14 +43,23 @@ cc_library(
 cc_library(
     name = "flatbufferutils",
     srcs = [
+        "details/buffer_version.cpp",
+        "details/error.cpp",
         "details/load_buffer.cpp",
         "details/load_buffer_internal.hpp",
+        "details/version_reader.cpp",
     ],
     hdrs = [
+        "buffer_version_info.hpp",
+        "error.hpp",
+        "i_version_reader.hpp",
         "load_buffer.hpp",
+        "version_reader.hpp",
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//score/flatbuffers:flatbufferscpp",
+        "//score/flatbuffers/common:buffer_version_envelope",
         "@score_baselibs//score/filesystem",
         "@score_baselibs//score/os:fcntl",
         "@score_baselibs//score/os:stat",
@@ -61,6 +70,7 @@ cc_library(
 
 cc_test(
     name = "load_buffer_unit_test",
+    size = "small",
     srcs = ["details/load_buffer_test.cpp"],
     tags = ["unit"],
     deps = [
@@ -74,7 +84,27 @@ cc_test(
 
 cc_test(
     name = "load_buffer_test",
+    size = "small",
     srcs = ["test/load_buffer_test.cpp"],
+    deps = [
+        ":flatbufferutils",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "version_reader_test",
+    size = "small",
+    srcs = ["test/version_reader_test.cpp"],
+    data = [
+        "//score/flatbuffers/test/testdata:gen_versioned_buffer_bin",
+        "//score/flatbuffers/test/testdata:gen_versioned_buffer_version_info_wrong_field",
+        "//score/flatbuffers/test/testdata:gen_versioned_buffer_version_info_wrong_field_similar_type",
+        "//score/flatbuffers/test/testdata:gen_versioned_max_buffer_bin",
+        "//score/flatbuffers/test/testdata:gen_versioned_max_range_buffer_bin",
+        "//score/flatbuffers/test/testdata:gen_versioned_min_buffer_bin",
+        "//score/flatbuffers/test/testdata:gen_versioned_min_range_buffer_bin",
+    ],
     deps = [
         ":flatbufferutils",
         "@googletest//:gtest_main",
